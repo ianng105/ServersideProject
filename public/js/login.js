@@ -9,16 +9,7 @@
       }
     }
 
-    // 示例：登录/忘记密码/三方登录点击处理（替换为你的真实路由）
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      // 这里替换成真实表单提交
-      alert('在此处理登录提交或跳转');
-    });
-    document.getElementById('forgot').addEventListener('click', (e) => {
-      e.preventDefault();
-      // 替换为你的忘记密码页面路径
-      alert('跳转到忘记密码页');
-    });
+   
 
     function oauth(provider){
       const map = {
