@@ -3,53 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <link href="./login.css" rel="/css/login.css" />
-  <title>app</title>
+  <title><%= title || 'HealthyPal' %></title>
+
+  <!-- 引用你已有的样式文件：根据你的文件名修改路径 -->
+  <link rel="stylesheet" href="<%= cssHref || '/css/login.css' %>">
 </head>
 <body>
-  <div class="wrap">
-    <main class="phone">
-      <header class="brand">
-        <small>Welcome to use</small>
-        <div class="logo">HealthyPal</div>
-      </header>
+  <main class="wrap">
+    <div class="badge"><%= appLabel || 'app' %></div>
 
-      <section class="carousel" aria-label="引导轮播">
-        <div class="track" id="track">
-          <!-- Slide 1 -->
-          <article class="slide">
-            <div class="hero">
-              <img src="https://picsum.photos/seed/fit1/900/700" alt="slide 1">
-            </div>
-            <div class="title">Are you ready to start? Tracking begins now!</div>
-          </article>
-          <!-- Slide 2 -->
-          <article class="slide">
-            <div class="hero">
-              <img src="https://picsum.photos/seed/fit2/900/700" alt="slide 2">
-            </div>
-            <div class="title">Understand the effects of diet and exercise </div>
-          </article>
-          <!-- Slide 3 -->
-          <article class="slide">
-            <div class="hero">
-              <img src="https://picsum.photos/seed/fit3/900/700" alt="slide 3">
-            </div>
-            <div class="title">Make mindful eating a long-term habit</div>
-          </article>
-        </div>
+    <h2><%= welcome || 'Welcome to use' %></h2>
+    <h1><%= product || 'HealthyPal' %></h1>
 
-        <div class="dots" id="dots" aria-hidden="true"></div>
+    <p class="lead"><%= tagline || 'Are you ready to start? Tracking begins now!' %></p>
 
-      </section>
+    <% const list = Array.isArray(bullets) && bullets.length ? bullets : [
+      'Understand the effects of diet and exercise',
+      'Make mindful eating a long-term habit'
+    ]; %>
+    <ul class="features">
+      <% list.forEach(item => { %>
+        <li><%= item %></li>
+      <% }) %>
+    </ul>
 
-      <section class="cta">
-        <button class="btn btn-primary" onclick="location.href='register_page.html'"">Register For Free</button>
-        <a class="btn-link" href="#login" onclick="location.href='login_page.html'">Login</a>
-        <div class="version">Version 1.0.0</div>
-      </section>
-    </main>
-  </div>
-<script src="./login.js"></script>
+    <div class="cta">
+      <a class="btn primary" href="<%= registerHref || '/register' %>"><%= registerText || 'Register For Free' %></a>
+      <a class="btn" href="<%= loginHref || '/login' %>"><%= loginText || 'Login' %></a>
+    </div>
+
+    <footer class="footer">
+      Version <%= version || '1.0.0' %>
+    </footer>
+  </main>
+
+  <!-- 引用你已有的脚本文件：根据你的文件名修改路径 -->
+  <script src="<%= jsSrc || '/js/login.js' %>"></script>
 </body>
 </html>
