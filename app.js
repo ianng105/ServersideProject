@@ -12,24 +12,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 根路由，渲染 welcome.ejs
 
 app.get('/', (req, res) => {
-  res.redirect('./welcome');
+  res.render('welcome'); // 首页
 });
-
-app.get('/welcome', (req, res) => {
-  res.status(200).render('welcome');
-});//首页
 
 app.get('/login', (req, res) => {
   res.render('login'); // 登录页
 });
 
-app.get('/register', (req, res) => {
-  res.render('register'); // 注册页
-});
-
 app.get('/login/main', (req, res) => {
   res.render('main'); // 主界面
 });
+
 
 // 1. 新增 /main 路由，用于渲染模仿 Instagram 布局的主页
 app.get('/main', (req, res) => {
@@ -55,6 +48,9 @@ app.get('/main', (req, res) => {
 
   // 3. 渲染 main.ejs，并传递 mockPosts 数据
   res.render('main', { posts: mockPosts });
+});
+app.get('/bodyInfo', (req, res) => {
+  res.render('bodyInfo');
 });
 
 app.listen(PORT, () => {
