@@ -57,6 +57,11 @@ app.get('/bodyInfo', (req, res) => {
   res.render('bodyInfo');
 });
 
+app.get('/bodyInfoForm', (req, res) => {
+  res.render('bodyInfoForm');
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 
