@@ -1,0 +1,94 @@
+    .content {
+      margin-left: 260px; /* Adjust to your sidebar width */
+      padding: 32px 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      padding: 24px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card-header i {
+      color: #3b82f6;
+      font-size: 20px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
+    form.body-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 20px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field.full {
+      grid-column: 1 / -1;
+    }
+    label {
+      font-size: 14px;
+      color: #374151;
+    }
+    input[type="number"],
+    input[type="text"],
+    select,
+    input[type="date"] {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fff;
+      outline: none;
+      font-size: 14px;
+      color: #111827;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus, select:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+    }
+    .hint {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: -4px;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .btn {
+      height: 40px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      color: #fff;
+    }
+    .btn:active { transform: translateY(1px); }
+    @media (max-width: 900px) {
+      .content { margin-left: 0; padding: 16px; }
+      form.body-form { grid-template-columns: 1fr; }
+    }
