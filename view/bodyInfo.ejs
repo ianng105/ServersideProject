@@ -1,8 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthyPal - Body Info</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/bodyInfo.css"/>
 </head>
-<body></body>
-</html>	
+<body>
+  <aside class="sidebar">
+    <h2>HealthyPal</h2>
+    <nav>
+      <a href="/main">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+      <a href="/newPost">
+        <i class="fa-solid fa-upload"></i>
+        <span>Share</span>
+      </a>
+      <a class="active" href="/bodyInfo">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Body Info</span>
+      </a>
+    </nav>
+    <a href="/logout" class="logout">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Logout</span>
+    </a>
+  </aside>
+
+  <main class="content">
+    <section class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-dumbbell"></i>
+        <div class="card-title">Enter / Update Your Body Info</div>
+      </div>
+
+      <form class="body-form" action="/submit-body-info" method="POST">
+        <div class="field">
+          <label for="height">Height (cm)</label>
+          <input type="number" id="height" name="height" min="50" max="260" step="0.1" placeholder="e.g., 172.5" required />
+          <div class="hint">Used to calculate BMI and BMR</div>
+        </div>
+
+        <div class="field">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" name="weight" min="20" max="400" step="0.1" placeholder="e.g., 65.2" required />
+        </div>
+
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender" required>
+            <option value="">Please choose</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="birthday">Date of Birth</label>
+          <input type="date" id="birthday" name="birthday" />
+          <div class="hint">Optional</div>
+        </div>
+
+        <!-- Optional fields (no 'required') -->
+        <div class="field">
+          <label for="bodyFat">Body Fat (%) <span class="hint">(Optional)</span></label>
+          <input type="number" id="bodyFat" name="bodyFat" min="1" max="75" step="0.1" placeholder="Optional" />
+        </div>
+
+        <div class="field">
+          <label for="waist">Waist (cm) <span class="hint">(Optional)</span></label>
+          <input type="number" id="waist" name="waist" min="30" max="200" step="0.1" placeholder="Optional" />
+        </div>
+
+        <div class="field">
+          <label for="hip">Hip (cm) <span class="hint">(Optional)</span></label>
+          <input type="number" id="hip" name="hip" min="30" max="200" step="0.1" placeholder="Optional" />
+        </div>
+
+        <div class="field">
+          <label for="neck">Neck (cm) <span class="hint">(Optional)</span></label>
+          <input type="number" id="neck" name="neck" min="15" max="70" step="0.1" placeholder="Optional" />
+        </div>
+
+        <div class="field">
+          <label for="activity">Activity Level <span class="hint">(Optional)</span></label>
+          <select id="activity" name="activity">
+            <option value="">Please choose (optional)</option>
+            <option value="sedentary">Sedentary (little or no exercise)</option>
+            <option value="light">Light (1–3 days/week)</option>
+            <option value="moderate">Moderate (3–5 days/week)</option>
+            <option value="active">Active (6–7 days/week)</option>
+            <option value="athlete">Very active / Athlete</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="goal">Goal <span class="hint">(Optional)</span></label>
+          <select id="goal" name="goal">
+            <option value="">Please choose (optional)</option>
+            <option value="lose">Lose fat</option>
+            <option value="maintain">Maintain</option>
+            <option value="gain">Gain muscle / weight</option>
+          </select>
+        </div>
+
+        <div class="actions full">
+          <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
