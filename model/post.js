@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 
 // 1. 数据库配置
-const uri = 'mongodb://localhost:27017'; // 你的 MongoDB 连接字符串
+const uri = 'mongodb+srv://huil25514_db_user:<1234>@cluster0.96ftjs5.mongodb.net/?appName=Cluster0'; // 你的 MongoDB 连接字符串
 const client = new MongoClient(uri);
 const dbName = 'healthypal'; // 你的数据库名称（改）
 const collectionName = 'posts'; // 你的集合名称（改）
@@ -88,4 +88,5 @@ module.exports = {
   findPostById,
   updatePost,
   deletePost
+
 };
