@@ -26,5 +26,5 @@
       // 提交到后端或跳转到下一步页面
       // form.submit(); // 如果需要真正提交
       // 演示：跳转下一步
-      window.location.href = '/bodyinfo';
+      window.location.href = '/bodyinfoForm';
     });
