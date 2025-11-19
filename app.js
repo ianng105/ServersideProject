@@ -24,7 +24,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.render('register'); // 登录页
+  res.render('register'); // 注册页
 });
 
 app.get('/login/main', (req, res) => {
