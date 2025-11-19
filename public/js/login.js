@@ -1,13 +1,6 @@
  // 返回逻辑：优先回退历史，否则跳转到备用链接
     const FALLBACK_URL = './welcome'; // 没有历史时跳转地址，按需修改
 
-    function goBack(){
-      if (document.referrer && window.history.length > 1) {
-        history.back();
-      } else {
-        window.location.href = FALLBACK_URL;
-      }
-    }
 
    
 
