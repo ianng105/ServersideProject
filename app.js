@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.get('/welcome', (req, res) => {
   res.status(200).render('welcome');
-});
+});//首页
 
 app.get('/login', (req, res) => {
   res.render('login'); // 登录页
