@@ -1,87 +1,74 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
-// 1. 数据库配置
-const uri = 'mongodb://localhost:27017'; // 你的 MongoDB 连接字符串
+// 复用 MongoDB Atlas 连接字符串
+const uri = "mongodb+srv://hui125514_db_user:1234@c1uster0.96ftjs5.mongodb.net/?appName=Cluster0";
 const client = new MongoClient(uri);
-const dbName = 'healthypal'; // 你的数据库名称（改）
-const collectionName = 'posts'; // 你的集合名称（改）
+const dbName = "healthypal";
+const collectionName = "post";
 
-// 2. 连接数据库的辅助函数
-async function connectDB() {
-  try {
-    await client.connect();
-    console.log('Connected to MongoDB successfully');
-    return client.db(dbName).collection(collectionName);
-  } catch (err) {
-    console.error('Connection error:', err);
-    throw err; // 将错误向上抛出
-  }
+// 连接数据库并获取集合
+async function getCollection() {
+  await client.connect();
+  return client.db(dbName).collection(collectionName);
 }
 
-// 3. CRUD 操作实现
-
-// Create (创建)
+// 创建帖子（关联用户ID）
 async function createPost(postData) {
-  const collection = await connectDB();
+  const collection = await getCollection();
   try {
     const result = await collection.insertOne(postData);
-    // 返回创建的文档，包含自动生成的 _id
     return { ...postData, _id: result.insertedId };
   } finally {
-    await client.close(); // 操作完成后关闭连接
+    await client.close();
   }
 }
 
-// Read (读取) - 获取所有帖子
+// 查询所有帖子（关联用户信息）
 async function findAllPosts() {
-  const collection = await connectDB();
-  try {c
-    // find() 返回一个游标，需要用 toArray() 转换为数组
-    return await collection.find({}).toArray();
-  } finally {
-    await client.close();
-  }
-}
-
-// Read (读取) - 根据 ID 获取单个帖子
-async function findPostById(id) {
-  const collection = await connectDB();
+  const collection = await getCollection();
   try {
-    // MongoDB 的 _id 是 ObjectId 类型，需要用 new ObjectId(id) 转换
-    return await collection.findOne({ _id: new require('mongodb').ObjectId(id) });
+    // 模拟关联查询（原生驱动需手动join，此处简化为查询后前端处理）
+    return await collection.find().toArray();
   } finally {
     await client.close();
   }
 }
 
-// Update (更新)
+// 根据ID查询帖子
+async function findPostById(id) {
+  const collection = await getCollection();
+  try {
+    return await collection.findOne({ _id: new ObjectId(id) });
+  } finally {
+    await client.close();
+  }
+}
+
+// 更新帖子
 async function updatePost(id, updateData) {
-  const collection = await connectDB();
+  const collection = await getCollection();
   try {
     const result = await collection.updateOne(
-      { _id: new require('mongodb').ObjectId(id) },
-      { $set: updateData } // $set 操作符表示只更新提供的字段
+      { _id: new ObjectId(id) },
+      { $set: updateData }
     );
-    // 返回更新是否成功
     return result.modifiedCount > 0;
   } finally {
     await client.close();
   }
 }
 
-// Delete (删除)
+// 删除帖子
 async function deletePost(id) {
-  const collection = await connectDB();
+  const collection = await getCollection();
   try {
-    const result = await collection.deleteOne({ _id: new require('mongodb').ObjectId(id) });
-    // 返回删除是否成功
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
     return result.deletedCount > 0;
   } finally {
     await client.close();
   }
 }
 
-// 4. 导出函数
 module.exports = {
   createPost,
   findAllPosts,
