@@ -1,88 +1,74 @@
 const { MongoClient, ObjectId } = require('mongodb');
-
-// MongoDB Atlas 连接字符串
-const uri = "mongodb+srv://hui125514_db_user:1234@cluster0.96ftjs5.mongodb.net/?appName=Cluster0";
-const client = new MongoClient(uri);
-const dbName = "healthypal";
+const{getDB} = require("./mongo");
 const collectionName = "user";
+class User{
 
-// 连接数据库并获取集合
-async function getCollection() {
-  await client.connect();
-  return client.db(dbName).collection(collectionName);
-}
+	// 连接数据库并获取集合
+	static async getCollection() {
+		
+		  const db=getDB();
+		  return await db.collection(collectionName);
+		
 
-// 注册用户
-async function createUser(userData) {
-  const collection = await getCollection();
-  try {
-    const result = await collection.insertOne(userData);
-    return { ...userData, _id: result.insertedId };
-  } finally {
-    await client.close();
-  }
-}
+	}
 
-// 查询所有用户
-async function findAllUsers() {
-  const collection = await getCollection();
-  try {
-    return await collection.find().toArray();
-  } finally {
-    await client.close();
-  }
-}
+	// 注册用户
+	static async createUser(userData) {
+		
+		    const collection = await User.getCollection();
+		    const result = await collection.insertOne(userData);
+		    console.log(result);
+		    return { ...userData, _id: result.insertedId };
+		
 
-// 根据ID查询用户
-async function findUserById(id) {
-  const collection = await getCollection();
-  try {
-    return await collection.findOne({ _id: new ObjectId(id) });
-  } finally {
-    await client.close();
-  }
-}
+	}
 
-// 根据用户名查询用户（用于登录验证）
-async function findUserByUsername(username) {
-  const collection = await getCollection();
-  try {
-    return await collection.findOne({ username });
-  } finally {
-    await client.close();
-  }
-}
+	// 查询所有用户
+	static async findAllUsers() {
+		  const collection = await User.getCollection().find().toArray();
+		  return collection;
+	}
 
-// 更新用户信息
-async function updateUser(id, updateData) {
-  const collection = await getCollection();
-  try {
-    const result = await collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updateData }
-    );
-    return result.modifiedCount > 0;
-  } finally {
-    await client.close();
-  }
-}
+	// 根据ID查询用户
+	static async findUserById(id) {
+			const collection = await User.getCollection();	
+			return await collection.find().toArray();
+	  			
+	}
 
-// 删除用户
-async function deleteUser(id) {
-  const collection = await getCollection();
-  try {
-    const result = await collection.deleteOne({ _id: new ObjectId(id) });
-    return result.deletedCount > 0;
-  } finally {
-    await client.close();
-  }
+	// 根据用户名查询用户（用于登录验证）
+	static async  findUserByUsername(username) {
+			const collection = await User.getCollection();
+	  		return await collection.findOne({ username });
+	}
+
+	// 更新用户信息
+	static async  updateUser(id, updateData) {
+		    const collection = await User.getCollection();
+		    const result = await collection.updateOne(
+		      { _id: new ObjectId(id) },
+		      { $set: updateData }
+		    );
+		    return result.modifiedCount > 0;
+	}
+
+	// 删除用户
+	static async  deleteUser(id) {
+		
+		    const collection = await User.getCollection();
+		    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+		    return result.deletedCount > 0;
+		
+	    
+	  
+	}
 }
 
 module.exports = {
-  createUser,
-  findAllUsers,
-  findUserById,
-  findUserByUsername,
-  updateUser,
-  deleteUser
+  createUser: User.createUser,
+  findAllUsers: User.findAllUsers,
+  findUserById: User.findUserById,
+  findUserByUsername: User.findUserByUsername,
+  updateUser: User.updateUser,
+  deleteUser: User.deleteUser
 };
