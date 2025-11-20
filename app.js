@@ -3,6 +3,7 @@ const path = require('path');
 const app=express();
 const{connectDB}=require('./model/mongo')
 const User= require('./model/user');
+const Post= require('./model/post');
 const PORT = process.env.PORT || 8080;
 // 设置 EJS 视图引擎
 app.set('view engine', 'ejs');
@@ -36,31 +37,25 @@ app.get('/register', (req, res) => {
 });
 
 
-// 1. 新增 /main 路由，用于渲染模仿 Instagram 布局的主页
-app.get('/main', (req, res) => {
-  // 2. 新增模拟帖子数据（传递给 main.ejs 渲染动态内容）
-  const mockPosts = [
-    {
-      user: {
-        username: '健康达人',
-        avatar: '/images/avatar.jpg' // 头像路径（需放在 public/images 下）
-      },
-      image: 'https://picsum.photos/id/1/600/400', // 随机帖子图片
-      caption: '今天的健身成果，坚持就是胜利！💪'
-    },
-    {
-      user: {
-        username: '美食博主',
-        avatar: '/images/avatar.jpg'
-      },
-      image: 'https://picsum.photos/id/292/600/400',
-      caption: '分享一道健康又美味的沙拉 recipe 🥗'
-    }
-  ];
+app.get('/main', async (req, res) => {
+  try {
+    const rawPosts = await Post.findAllPosts(); // 从 MongoDB 读取
 
-  // 3. 渲染 main.ejs，并传递 mockPosts 数据
-  res.render('main', { posts: mockPosts });
+    // 映射成 main.ejs 期望的结构
+    const posts = rawPosts.map(p => ({
+      ...p,
+      user: { username: p.username || '匿名用户' }, // username -> user.username
+      image: p.image || null,
+      caption: typeof p.caption === 'string' ? p.caption : ''
+    }));
+
+    res.render('main', { posts });
+  } catch (err) {
+    console.error('加载帖子失败:', err);
+    res.status(500).send('服务器错误，无法加载帖子');
+  }
 });
+
 app.get('/bodyInfo', (req, res) => {
   res.render('bodyInfo');
 });
