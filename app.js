@@ -8,6 +8,7 @@ const path = require('path');
 const app=express();
 const{connectDB}=require('./model/mongo')
 const User= require('./model/user');
+const Userbody= require('./model/userbody');
 const Post= require('./model/post');
 const PORT = process.env.PORT || 8080;
 const cors = require('cors');
@@ -103,6 +104,10 @@ app.get('/searchCalories',(req, res)=>{
 })
 
 app.get('/main', async (req, res) => {
+  if(!req.session.loggedIn){
+  	console.log("Go back to first page");
+  	res.redirect("login");
+  }
   try {
     const rawPosts = await Post.findAllPosts(); // 从 MongoDB 读取
 
@@ -136,7 +141,7 @@ app.get('/logout',(req,res)=>{
 // 注册提交
 
 app.post('/register',async (req,res)=>{
-	console.log("register function start");
+	
   try {
     const email=req.body.email;
     console.log("email: ",email);
@@ -151,22 +156,27 @@ app.post('/register',async (req,res)=>{
     // 检查邮箱是否已存在
     console.log("before find userbyusername");
     const exists = await User.findUserByUsername(username);
+    console.log(exists);
     console.log("it works");
     if (exists){
-    	res.render('/register');
+    	res.resirect('/login');
     }
 	
    await User.createUser({
       username,
       email,
       password,
-    });
-
+    })
+    req.session.email=email;
+    req.session.username=username;
+    req.session.loggedIn=true;
+    console.log("email: ",req.session.email);
+    console.log("username: ",req.session.username);
     // 注册成功后跳转到 bodyInfoForm
     return res.redirect(302, '/bodyInfoForm');
   } catch (e) {
     console.error("This is the error message ",e);
-    res.render('/register');
+    res.redirect('/login');
   }
 	
 });
@@ -174,13 +184,16 @@ app.post('/register',async (req,res)=>{
 //new part
 app.post('/submit-body-info', async (req, res) => {
   // 从 cookie 拿到刚注册的用户名（如果你以后要做登录系统，这里会改成 req.session.user）
-  const username = req.cookies.temp_username;
+  const username = req.session.username;
 
   if (!username) {
     return res.status(400).send('无法识别用户，请重新注册');
   }
-
+	
+  const user = await User.findUserByUsername(username);
+  console.log("user_id: ",user._id);
   const bodyInfo = {
+    userId: user._id,
     height: Number(req.body.height),
     weight: Number(req.body.weight),
     gender: req.body.gender,
@@ -194,11 +207,7 @@ app.post('/submit-body-info', async (req, res) => {
   };
 
   try {
-    await User.updateBodyInfo(username, bodyInfo);
-
-    // 提交完毕，清除临时 cookie（防止重复提交）
-    res.clearCookie('temp_username');
-
+    await Userbody.createUserBody(bodyInfo);
     // ★成功后跳转到主页面
     return res.redirect('/main');
   } catch (err) {
@@ -224,7 +233,7 @@ app.post('/login', async (req, res) => {
     
     // 3. 查找用户
     console.log(`🔵 正在数据库中查找用户: ${email}`);
-    const user = await User.findUserByUsername(email);
+    const user = await User.findUserByEmail(email);
     
     if (!user) {
       console.log(`🔴 错误：未找到用户 ${email}`);
@@ -241,8 +250,10 @@ app.post('/login', async (req, res) => {
     // 5. 登录成功，设置会话
     req.session.userId = user._id;
     req.session.email = user.email;
+    req.session.username=user.username;
+    console.log(req.session.username);
     req.session.loggedIn = true;
-    console.log(`🟢 用户 ${email} 登录成功，会话已创建`);
+    console.log(`🟢 用户 ${req.session.username} 登录成功，会话已创建`);
     
     // 6. 重定向到主页
     res.redirect('/main');
