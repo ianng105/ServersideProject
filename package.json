@@ -15,6 +15,7 @@
     "express-session": "^1.17.3",
     "mongodb": "^6.3.0",
     "mongoose": "^7.0.0",
-    "oauth": "^0.10.2"
+    "oauth": "^0.10.2",
+    "cors": "^2.8.5"
   }
 }

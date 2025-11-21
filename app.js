@@ -10,7 +10,8 @@ const{connectDB}=require('./model/mongo')
 const User= require('./model/user');
 const Post= require('./model/post');
 const PORT = process.env.PORT || 8080;
-
+const cors = require('cors');
+const session = require('express-session');
 const oa = new OAuth(
   null,
   null,
@@ -37,7 +38,20 @@ connectDB()
     console.error('MongoDB connection failed:', err);
     process.exit(1);
   });
-
+app.use(cors({
+  origin: 'http://localhost:8080', // 前端页面的地址（与实际端口一致）
+  credentials: true, // 允许携带Cookie
+}));
+// 新增：配置session
+app.use(session({
+  secret: 'your-secret-key-here', // 生产环境应使用环境变量
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 1天有效期
+  }
+}));
 // 根路由，渲染 welcome.ejs
 
 app.get('/', (req, res) => {
@@ -192,6 +206,54 @@ app.post('/submit-body-info', async (req, res) => {
     return res.status(500).send('保存失败，请重试');
   }
 });
+
+app.post('/login', async (req, res) => {
+  console.log('🔵 收到登录请求 (表单提交)');
+
+  try {
+    // 1. 获取表单数据 (express.urlencoded 中间件会解析)
+    const { email, password } = req.body;
+    console.log('🔵 请求体内容:', req.body);
+    
+    // 2. 验证输入
+    if (!email || !password) {
+      console.log('🔴 错误：邮箱或密码为空');
+      // 可以使用 flash message 显示错误，这里为简化，直接重定向回登录页
+      return res.redirect('/login?error=empty');
+    }
+    
+    // 3. 查找用户
+    console.log(`🔵 正在数据库中查找用户: ${email}`);
+    const user = await User.findUserByUsername(email);
+    
+    if (!user) {
+      console.log(`🔴 错误：未找到用户 ${email}`);
+      return res.redirect('/login?error=invalid');
+    }
+    
+    // 4. 验证密码
+    console.log('🔵 找到用户，正在验证密码...');
+    if (user.password !== password) {
+      console.log('🔴 错误：密码不匹配');
+      return res.redirect('/login?error=invalid');
+    }
+    
+    // 5. 登录成功，设置会话
+    req.session.userId = user._id;
+    req.session.email = user.email;
+    req.session.loggedIn = true;
+    console.log(`🟢 用户 ${email} 登录成功，会话已创建`);
+    
+    // 6. 重定向到主页
+    res.redirect('/main');
+
+  } catch (error) {
+    console.error('🔴 登录过程中发生严重错误:', error);
+    // 服务器错误，重定向到错误页或登录页
+    res.redirect('/login?error=server');
+  }
+});
+
 
 //end 
 
