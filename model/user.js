@@ -28,11 +28,15 @@ class User {
     return await collection.findOne({ _id: new ObjectId(id) });
   }
 
-  static async findUserByUsername(email) {
+  static async findUserByUsername(username) {
+    const collection = await User.getCollection();
+    return await collection.findOne({ username });
+  }
+
+  static async findUserByEmail(email) {
     const collection = await User.getCollection();
     return await collection.findOne({ email });
   }
-
   // 更新用户信息
   static async updateUser(id, updateData) {
     const collection = await User.getCollection();
