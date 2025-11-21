@@ -110,6 +110,44 @@ app.post('/register',async (req,res)=>{
 	
 });
 
+//new part
+app.post('/submit-body-info', async (req, res) => {
+  // 从 cookie 拿到刚注册的用户名（如果你以后要做登录系统，这里会改成 req.session.user）
+  const username = req.cookies.temp_username;
+
+  if (!username) {
+    return res.status(400).send('无法识别用户，请重新注册');
+  }
+
+  const bodyInfo = {
+    height: Number(req.body.height),
+    weight: Number(req.body.weight),
+    gender: req.body.gender,
+    birthday: req.body.birthday ? new Date(req.body.birthday) : null,
+    bodyFat: req.body.bodyFat ? Number(req.body.bodyFat) : null,
+    waist: req.body.waist ? Number(req.body.waist) : null,
+    hip: req.body.hip ? Number(req.body.hip) : null,
+    neck: req.body.neck ? Number(req.body.neck) : null,
+    activity: req.body.activity || null,
+    goal: req.body.goal || null,
+  };
+
+  try {
+    await User.updateBodyInfo(username, bodyInfo);
+
+    // 提交完毕，清除临时 cookie（防止重复提交）
+    res.clearCookie('temp_username');
+
+    // ★成功后跳转到主页面
+    return res.redirect('/main');
+  } catch (err) {
+    console.error('保存身体信息失败:', err);
+    return res.status(500).send('保存失败，请重试');
+  }
+});
+
+//end 
+
 async function start() {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
