@@ -135,25 +135,23 @@
       <!-- Submit to /newPost with multipart/form-data to support image upload -->
       <form class="new-post-form" action="/newPost" method="POST" enctype="multipart/form-data">
         <!-- Username: optional. If you have auth, fill on server side. -->
-        <div class="field">
-          <label for="username">Nickname (optional)</label>
-          <input type="text" id="username" name="username" placeholder="e.g., FitBuddy"/>
-          <div class="hint">Leave empty to use a default or logged-in username.</div>
-        </div>
+        
 
         <!-- Image upload: required -->
         <div class="field">
           <label for="image">Image</label>
-          <input type="file" id="image" name="image" accept="image/*" required />
+          <input type="file" id="image" name="image" accept="image/*" />
           <div class="hint">Supports jpg/png/webp/gif. Suggested size ≥ 800×600.</div>
         </div>
-
+        
         <!-- Text content -->
         <div class="field full">
           <label for="caption">What do you want to share?</label>
           <textarea id="caption" name="caption" placeholder="Share your workout, meals, or health insights..." required></textarea>
           <div class="hint">Example: Completed a 5km easy run with a high-protein, low-fat meal plan. Feeling great!</div>
         </div>
+        
+
 
         <!-- Preview -->
         <div id="preview" class="preview full">

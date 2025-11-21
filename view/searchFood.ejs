@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <body>
+  	<div>
+  		<form action="/searchCalories" method="GET">
+	  		<label for="foodInput">what have you eat</label>
+	  		<input type="text" name="foodInput" require/>
+	  		<button type="submit">Search</button>
+	  	</form>
+  		<div>
+  			<%if(foodarray&&foodarray.length!=0){%>
+  			  <%for(let i=0;i<foodarray.length;i++){%>
+  			  	<div>
+  			  		<strong><%=foodarray[i].food_name%></strong>
+  			  		<img src="<%=foodarray[i].food_url%>" height="50px" weight="100px"/>
+  			  		<p>Calories: <%=foodarray[i].servings.serving[0].calories%></p>
+  			  		<p><%=foodarray[i].servings.serving[0].serving_description%></p>
+  			  	</div>
+  			  <%}%>
+  			<%}%>
+  		</div>
+  	</div>
+  </body>
+</html>
