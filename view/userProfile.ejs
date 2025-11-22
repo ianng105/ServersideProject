@@ -1,2 +1,185 @@
 <!DOCTYPE html>
-<html></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile - HealthyPal</title>
+  <style>
+    :root{
+      --brand:#3b82f6;
+      --bg:#f8fafc;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e2e8f0;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif}
+    a{color:var(--brand);text-decoration:none}
+    .container{max-width:980px;margin:0 auto;padding:16px}
+
+    /* 顶部导航 */
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;background:var(--card);border:1px solid var(--border);
+      border-radius:14px;padding:10px 12px;margin-bottom:16px;
+    }
+    .nav-left,.nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .brand{font-weight:800;letter-spacing:.2px}
+    .btn{
+      padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--text);font-weight:600
+    }
+    .btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .danger{color:#ef4444}
+
+    /* 头像区：置中 + 放大 */
+    .profile-card{
+      background:var(--card);border:1px solid var(--border);border-radius:16px;
+      padding:22px 16px;margin-bottom:16px;text-align:center;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    }
+    .avatar{
+      width:140px;height:140px; /* 放大头像 */
+      border-radius:50%;object-fit:cover;display:block;
+      border:3px solid #fff;box-shadow:0 8px 24px rgba(2,6,23,0.08);
+    }
+    .username{font-size:20px;font-weight:800;margin-top:4px}
+    .plan{font-size:14px;color:var(--muted)}
+
+    /* 主体布局：左侧信息 + 右侧日历 */
+    .main-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:16px;
+    }
+    @media (max-width: 900px){
+      .main-grid{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;
+    }
+    .card h3{margin:6px 0 10px;font-size:16px}
+
+    /* 日历缩小样式 */
+    .calendar{
+      --cell-size:42px;      /* 缩小格子尺寸 */
+      --cell-font:12px;      /* 缩小字体 */
+      --header-font:14px;
+      --dow-font:11px;
+    }
+    .calendar-header{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:8px
+    }
+    .calendar-title{font-weight:700;font-size:var(--header-font)}
+    .calendar-grid{
+      display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
+    }
+    .dow{
+      text-align:center;color:var(--muted);font-size:var(--dow-font);padding:4px 0
+    }
+    .day{
+      height:var(--cell-size);display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);border-radius:10px;font-size:var(--cell-font);
+      background:#fff;
+    }
+    .day.today{border-color:var(--brand);box-shadow:0 0 0 2px rgba(59,130,246,0.15) inset}
+    .day.muted{color:#94a3b8;background:#f8fafc}
+
+    /* 更紧凑的移动端日历 */
+    @media (max-width: 600px){
+      .calendar{
+        --cell-size:34px;
+        --cell-font:11px;
+        --header-font:13px;
+        --dow-font:10px;
+      }
+      .container{padding:12px}
+      .avatar{width:128px;height:128px} /* 窄屏仍保持较大头像 */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部导航 -->
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="brand">HealthyPal</span>
+        <a href="/main" class="btn">Home</a>
+        <a href="/share" class="btn">Share</a>
+        <a href="/bodyInfo" class="btn">Body Info</a>
+        <a href="/calendar" class="btn">Calendar</a>
+      </div>
+      <div class="nav-right">
+        <form action="/logout" method="POST" style="margin:0">
+          <button type="submit" class="btn">Logout</button>
+        </form>
+      </div>
+    </nav>
+
+    <!-- 头像置中放大 -->
+    <section class="profile-card">
+      <!-- 如果你有头像 URL，可用 user.avatarUrl；没有就用一个占位符字母头像或本地默认图 -->
+      <img class="avatar" src="<%= (typeof user !== 'undefined' && user.avatarUrl) ? user.avatarUrl : 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22140%22 height=%22140%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23e2e8f0%22/><text x=%2250%25%22 y=%2252%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2256%22 fill=%22%2364758b%22 font-family=%22sans-serif%22>%F0%9F%91%A4</text></svg>' %>" alt="avatar"/>
+      <div class="username"><%= (typeof user !== 'undefined' && user.username) ? user.username : '匿名用户' %></div>
+      <div class="plan">Plan: <%= (typeof user !== 'undefined' && user.plan) ? user.plan : 'No plan set yet' %></div>
+    </section>
+
+    <!-- 主体：信息与日历 -->
+    <div class="main-grid">
+      <section class="card">
+        <h3>Profile</h3>
+        <p><strong>Username:</strong> <%= (typeof user !== 'undefined' && user.username) ? user.username : '匿名用户' %></p>
+        <p><strong>Plan:</strong> <%= (typeof user !== 'undefined' && user.plan) ? user.plan : 'No plan set yet' %></p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <form action="/delete-account" method="POST" onsubmit="return confirm('确定要删除账户吗？此操作不可恢复。')" style="margin:0">
+            <button class="btn danger" type="submit">Delete Account</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="card calendar">
+        <div class="calendar-header">
+          <div class="calendar-title">Calendar</div>
+          <!-- 可添加切换月份按钮（如需要） -->
+        </div>
+        <div class="calendar-grid">
+          <div class="dow">Sun</div>
+          <div class="dow">Mon</div>
+          <div class="dow">Tue</div>
+          <div class="dow">Wed</div>
+          <div class="dow">Thu</div>
+          <div class="dow">Fri</div>
+          <div class="dow">Sat</div>
+
+          <!-- 示例静态日期格。你的项目若已有渲染逻辑，可用循环替换这些占位符。 -->
+          <%
+            // 生成一个紧凑月视图示例（以当前月为例）。若你已有现成日历数据，请替换为你的迭代渲染。
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const startDow = firstDay.getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            const totalCells = 42; // 6行 * 7列
+            for (let i = 0; i < totalCells; i++) {
+              let dayNum, cls = 'day';
+              if (i < startDow) {
+                dayNum = prevMonthDays - startDow + 1 + i;
+                cls += ' muted';
+              } else if (i >= startDow + daysInMonth) {
+                dayNum = i - (startDow + daysInMonth) + 1;
+                cls += ' muted';
+              } else {
+                dayNum = i - startDow + 1;
+                const isToday = (dayNum === today.getDate());
+                if (isToday) cls += ' today';
+              }
+          %>
+            <div class="<%= cls %>"><%= dayNum %></div>
+          <% } %>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
