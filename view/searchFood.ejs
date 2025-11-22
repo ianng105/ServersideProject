@@ -1,24 +1,52 @@
 <!DOCTYPE html>
 <html>
-  <body>
-  	<div>
-  		<form action="/searchCalories" method="GET">
-	  		<label for="foodInput">what have you eat</label>
-	  		<input type="text" name="foodInput" require/>
-	  		<button type="submit">Search</button>
-	  	</form>
-  		<div>
-  			<%if(foodarray&&foodarray.length!=0){%>
-  			  <%for(let i=0;i<foodarray.length;i++){%>
-  			  	<div>
-  			  		<strong><%=foodarray[i].food_name%></strong>
-  			  		<img src="<%=foodarray[i].food_url%>" height="50px" weight="100px"/>
-  			  		<p>Calories: <%=foodarray[i].servings.serving[0].calories%></p>
-  			  		<p><%=foodarray[i].servings.serving[0].serving_description%></p>
-  			  	</div>
-  			  <%}%>
-  			<%}%>
-  		</div>
-  	</div>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>what have you eat</title>
+  <style>
+    .food-item { border: 1px solid #ddd; padding: 10px; margin: 8px 0; border-radius: 6px; }
+    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .actions { margin-top: 8px; display: flex; gap: 8px; align-items: center; }
+    input[type="number"] { width: 80px; }
+  </style>
+</head>
+<body>
+  <h1>what have you eat</h1>
+<div style="margin-top:16px;">
+    <a href="/eaten" target="_blank">查看总卡路里</a>
+  </div>
+  <form action="/searchCalories" method="get" style="margin-bottom:16px;">
+    <input type="text" name="foodInput" placeholder="Search" required>
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (foodarray && foodarray.length != 0) { %>
+    <% for (let i = 0; i < foodarray.length; i++) { 
+         const item = foodarray[i];
+         const serving = Array.isArray(item.servings?.serving) ? item.servings.serving[0] : item.servings?.serving;
+         const calories = serving?.calories || 0;
+         const desc = serving?.serving_description || '';
+    %>
+    
+      <div class="food-item">
+        <div><strong><%= item.food_name %></strong></div>
+        <div>Calories: <%= calories %></div>
+        <div><%= desc %></div>
+
+        <!-- 加入已吃列表 -->
+        <form action="/eaten/add" method="post" class="actions">
+          <input type="hidden" name="food_name" value="<%= item.food_name %>">
+          <input type="hidden" name="calories" value="<%= calories %>">
+          <input type="hidden" name="serving_description" value="<%= desc %>">
+          <label>份数:
+            <input type="number" name="quantity" value="1" min="1" step="1">
+          </label>
+          <button type="submit">加入已吃列表</button>
+        </form>
+      </div>
+    <% } %>
+  <% } %>
+
+  
+</body>
 </html>

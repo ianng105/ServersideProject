@@ -71,6 +71,12 @@
       font-weight: 600;
     }
     .empty a:hover { text-decoration: underline; }
+    .brand{
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.2px;
+}
+.brand b{ color:#10b981; }
 
     @media (max-width: 900px) {
       .content { margin-left: 0; padding: 16px; }
@@ -80,7 +86,6 @@
 <body>
   <!-- 左侧侧边栏 -->
   <aside class="sidebar">
-    <h2>HealthyPal</h2>
     <nav>
       <a class="active" href="/main">
         <i class="fa-solid fa-house"></i>
@@ -103,6 +108,13 @@
 
   <!-- 右侧内容：帖子流 -->
   <main class="content">
+      <div class="brand">
+  <% if (typeof displayName !== 'undefined' && displayName) { %>
+    Hi <%= displayName %> !
+  <% } else { %>
+    HealthyPal
+  <% } %>
+</div>
     <section class="feed">
       <% if (posts && posts.length > 0) { %>
         <% posts.forEach(post => { %>
