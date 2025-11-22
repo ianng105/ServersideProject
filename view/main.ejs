@@ -118,7 +118,13 @@
 
   <!-- 左侧侧边栏 -->
   <aside class="sidebar">
-    <h2>HealthyPal</h2>
+    <div class="brand">
+  <% if (typeof displayName !== 'undefined' && displayName) { %>
+    <strong>Hi <%= displayName %>, welcome to HealthyPal</strong>
+  <% } else { %>
+    HealthyPal
+  <% } %>
+</div>
     <nav>
       <a class="active" href="/main">
         <i class="fa-solid fa-house"></i>
@@ -175,5 +181,6 @@
   </main>
 </body>
 </html>
+
 
 
