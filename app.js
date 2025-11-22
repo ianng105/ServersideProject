@@ -388,7 +388,7 @@ app.get('/eaten', (req, res) => {
   const list = ensureEatenList(req);
   const totalCalories = calcTotalCalories(list);
   // 你也可以改为 res.render('eaten', { list, totalCalories });
-  res.render(eaten,{ list, totalCalories });
+  res.json({ list, totalCalories });
 });
 
 
