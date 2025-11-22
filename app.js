@@ -144,10 +144,10 @@ app.get('/newPost', (req, res) => {
 });
 
 app.get('/userProfile', (req, res) => {
-  // 这里传入一个可选的占位 user，便于 EJS 展示
+  const username = req.session && req.session.username ? req.session.username : '匿名用户';
   res.render('userProfile', {
     user: {
-      username: '匿名用户',
+      username,
       avatar: '/images/avatar.jpg',
       plan: 'Keep a balanced workout: 3x strength + 2x cardio per week'
     }
