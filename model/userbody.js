@@ -22,11 +22,7 @@ class Userbody{
 	      weight: Number(userBodyData.weight) || null,
 	      gender: userBodyData.gender || null,
 	      birthday: userBodyData.birthday ? new Date(userBodyData.birthday) : null,
-	      bodyFat: userBodyData.bodyFat ? Number(userBodyData.bodyFat) : null,
-	      waist: userBodyData.waist ? Number(userBodyData.waist) : null,
-	      hip: userBodyData.hip ? Number(userBodyData.hip) : null,
-	      neck: userBodyData.neck ? Number(userBodyData.neck) : null,
-	      activityLevel: userBodyData.activityLevel || null,
+	      activityLevel: userBodyData.activity || null,
 	      goal: userBodyData.goal || null,
 	      createdAt: new Date(),
 	      updatedAt: new Date()
@@ -107,3 +103,4 @@ module.exports = {
   updateUserBody: Userbody.updateUserBody,            // 最常用
   deleteUserBody: Userbody.deleteUserBody
 };
+
