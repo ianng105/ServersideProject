@@ -24,6 +24,9 @@ class Userbody{
 	      birthday: userBodyData.birthday ? new Date(userBodyData.birthday) : null,
 	      activityLevel: userBodyData.activity || null,
 	      goal: userBodyData.goal || null,
+		  TDEE:userBodyData.TDEE!= null ?Number(userBodyData.TDEE): null,
+		  maximumIntake:userBodyData.maximumIntake != null ?Number(userBodyData.maximumIntake) : null,
+		  minimumIntake:userBodyData.minimumIntake != null ?Number(userBodyData.minimumIntake) : null,
 	      createdAt: new Date(),
 	      updatedAt: new Date()
 	    };
@@ -66,12 +69,12 @@ class Userbody{
 	    if (updateData.weight !== undefined) cleanData.weight = Number(updateData.weight) || null;
 	    if (updateData.gender !== undefined) cleanData.gender = updateData.gender || null;
 	    if (updateData.birthday !== undefined) cleanData.birthday = updateData.birthday ? new Date(updateData.birthday) : null;
-	    if (updateData.bodyFat !== undefined) cleanData.bodyFat = updateData.bodyFat ? Number(updateData.bodyFat) : null;
-	    if (updateData.waist !== undefined) cleanData.waist = updateData.waist ? Number(updateData.waist) : null;
-	    if (updateData.hip !== undefined) cleanData.hip = updateData.hip ? Number(updateData.hip) : null;
-	    if (updateData.neck !== undefined) cleanData.neck = updateData.neck ? Number(updateData.neck) : null;
 	    if (updateData.activityLevel !== undefined) cleanData.activityLevel = updateData.activityLevel || null;
 	    if (updateData.goal !== undefined) cleanData.goal = updateData.goal || null;
+		if (updateData.TDEE !== undefined) cleanData.TDEE = updateData.TDEE != null ? Number(updateData.TDEE) : null;
+  		if (updateData.maximumIntake !== undefined) cleanData.maximumIntake = updateData.maximumIntake != null ? Number(updateData.maximumIntake) : null;
+  		if (updateData.minimumIntake !== undefined) cleanData.minimumIntake = updateData.minimumIntake != null ? Number(updateData.minimumIntake) : null;
+
 
 	    cleanData.updatedAt = new Date();
 
@@ -103,4 +106,5 @@ module.exports = {
   updateUserBody: Userbody.updateUserBody,            // 最常用
   deleteUserBody: Userbody.deleteUserBody
 };
+
 
