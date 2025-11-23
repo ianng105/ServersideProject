@@ -208,8 +208,35 @@ app.post('/submit-body-info', async (req, res) => {
   if (!username) {
     return res.status(400).send('无法识别用户，请重新注册');
   }
+const height=Number(req.body.height);
+const weight= Number(req.body.weight);
+const  gender= req.body.gender;
+const  birthday=req.body.birthday ? new Date(req.body.birthday) : null;
+const  activity=req.body.activity || null;
+const goal=req.body.goal || null;
+const user = await User.findUserByUsername(username);
+const bmr = calculateBMR({ gender, height, weight, birthday });
+const tdeeRaw = bmr ? calculateTDEE(bmr, activity) : null;
+const tdee = tdeeRaw ? Math.round(tdeeRaw) : null;
+ let maximum = null;
+  let minimum = null;
+    if (tdee) {
+      const g = (goal || '').toLowerCase();
 
-  const user = await User.findUserByUsername(username);
+      if (g.includes('gain')) {
+        // 增肌
+        maximum = tdee + 500;
+        minimum = tdee + 200;
+      } else if (g.includes('lose')) {
+        // 减脂
+        maximum = tdee - 200;
+        minimum = tdee - 500;
+      } else {
+        // 未选择或其他：这里可给一个保守范围，或置空
+        maximum = tdee;   // 你也可以选择 tdee + 100
+        minimum = tdee;   // 或 tdee - 100
+      }
+    }
   console.log("user_id: ",user._id);
   const bodyInfo = {
     userId: user._id,
@@ -219,7 +246,11 @@ app.post('/submit-body-info', async (req, res) => {
     birthday: req.body.birthday ? new Date(req.body.birthday) : null,
     activity: req.body.activity || null,
     goal: req.body.goal || null,
+    TDEE:tdeeRaw ? Math.round(tdeeRaw) : null,
+		maximumIntake:maximum ? maximum:null,
+		minimumIntake:minimum ? minimum:null,
   };
+
 
   try {
     await Userbody.createUserBody(bodyInfo);
@@ -501,5 +532,4 @@ function calculateTDEE(bmr, activity) {
   return bmr * factor;
 }
 
-module.exports = { calculateBMR, calculateTDEE, getAgeFromDOB };
 start();
