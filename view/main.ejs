@@ -51,6 +51,9 @@
     .post-body {
       padding: 12px 16px 16px;
     }
+    .post-food{
+       padding: 12px 16px 16px;
+    }
     .caption {
       color: #374151;
       font-size: 14px;
@@ -190,6 +193,48 @@
       --primary-dark:#2563eb;
       --secondary:#e5e7eb;    /* 次按钮浅灰 */
      }
+     .post-card {
+
+padding: 20px;
+
+border: 1px solid #e6e6e6;
+
+border-radius: 12px;
+
+background: #fff;
+
+box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+
+font-size: 16px; /* 放大文字 */
+
+line-height: 1.6;
+
+}
+
+.post-header {
+
+font-weight: 600;
+
+font-size: 18px; /* 用户名更显眼 */
+
+margin-bottom: 10px;
+
+}
+
+.post-image {
+width: 100%;
+max-height: 420px; /* 图片更高 */
+object-fit: cover;
+border-radius: 10px;
+margin: 12px 0;
+}
+
+.post-caption {
+font-size: 16px;
+margin: 8px 0 4px;
+white-space: pre-wrap;
+
+}
   </style>
 </head>
 <body>
@@ -243,15 +288,30 @@
             </header>
 
             <% if (post.image) { %>
-              <img class="post-image" src="<%= post.image %>" alt="post image" />
+              <img class="post-image" src="<%= post.image %>" alt="post image" style="max-width:100%;height:auto;"/>
             <% } %>
 
             <div class="post-body">
               <% if (post.caption) { %>
-                <div class="caption"><%= post.caption %></div>
+               <%= post.caption %>
               <% } %>
             </div>
-          </article>
+              <div class="post-food">
+               <% if (typeof post.totalCaloriesSnapshot !== 'undefined') { %>
+          <div>Total calories：<%= post.totalCaloriesSnapshot %> kcal</div>
+          <% } %>
+        <% if (Array.isArray(post.eatenListSnapshot) && post.eatenListSnapshot.length > 0) { %>
+        <ul>
+       <% post.eatenListSnapshot.forEach(it => { %>
+        <li>
+          <%= it.food_name %> - <%= Number(it.calories)||0 %> kcal/份 × <%= Number(it.quantity)||1 %>
+          </li>
+         <% }) %>
+        </ul>
+      <% } %>
+      </div>
+            
+      </article>
         <% }); %>
       <% } else { %>
         <div class="empty">
