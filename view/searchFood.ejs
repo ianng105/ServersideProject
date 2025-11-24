@@ -55,7 +55,8 @@
     .top-actions{
       display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
       margin-top:8px;
-    } :root{
+    } 
+    :root{
       --primary:#3b82f6;      /* 主按钮蓝色 */
       --primary-dark:#2563eb;
       --secondary:#e5e7eb;    /* 次按钮浅灰 */
@@ -190,14 +191,13 @@
         <span class="icon">🍽️</span>
         Search Food
       </h1>
-      <a href="/main" class="btn btn-secondary">back</a>
+      <a href="/main" class="btn btn-secondary">Back</a>
       </div>
       
 
       <form class="search-row" action="/searchCalories" method="get">
         <input type="text" name="foodInput" placeholder="Search food, e.g., apple" value="<%= typeof foodInput !== 'undefined' ? foodInput : '' %>" required>
         <button type="submit" class="btn btn-primary">Search</button>
-        <a href="/eaten" class="btn btn-secondary">查看总卡路里</a>
       </form>
 
       <div class="divider"></div>
