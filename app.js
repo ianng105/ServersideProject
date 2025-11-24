@@ -542,6 +542,33 @@ function calculateTDEE(bmr, activity) {
   return bmr * factor;
 }
 
+//呈现userbody数据
+const { findUserBodyByUserId, createUserBody, updateUserBody } = require('./models/userbody');
+
+// GET /bodyInfo
+app.get('/bodyInfo', async (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  
+  const userBody = await findUserBodyByUserId(req.session.user._id);
+  res.render('bodyInfo', { userBody: userBody || {} });
+});
+
+// POST /bodyInfo/bodyinfoform   
+app.post('/bodyInfo', async (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+
+  const userId = req.session.user._id;
+  const existing = await findUserBodyByUserId(userId);
+
+  if (existing) {
+    await updateUserBody(userId, req.body);
+  } else {
+    req.body.userId = userId;
+    await createUserBody(req.body);
+  }
+  res.redirect('/bodyInfo');
+});
+
 // 启动服务器
 async function start() {
   app.listen(PORT, () => {
