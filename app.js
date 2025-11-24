@@ -70,19 +70,26 @@ app.get('/searchCalories',(req, res)=>{
 	      }
 	      // Parse and send the response data
 	      //res.json(JSON.parse(data));
-	      const obj=JSON.parse(data);
-	      const foodArray = obj.foods_search.results.food;
+	     const obj = JSON.parse(data);
+    const foodArray = obj.foods_search.results.food;
+
+    const eatenList = Array.isArray(req.session.eatenList) ? req.session.eatenList : [];
+    const totalCalories = eatenList.reduce((sum, it) => {
+      const c = Number(it.calories) || 0;
+      const q = Number(it.quantity) || 1;
+      return sum + c * q;
+    }, 0);
 	      /*for(let i=0;i<foodArray.length;i++){	      		
 	      		const servingArray=foodArray[i].servings.serving
 	      }
 	      */
-	      res.render('searchFood',{foodarray:foodArray});
+	      res.render('searchFood',{foodarray:foodArray, eatenList, totalCalories });
 	      
 	      
 	    }
   	);
   	
-})
+});
 
 //====================display posts in main page=====================//
 app.get('/main', async (req, res) => {
@@ -144,8 +151,14 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/searchFood',(req,res)=>{
-	res.render('searchFood.ejs',{foodarray:[]});
-})
+const eatenList = Array.isArray(req.session.eatenList) ? req.session.eatenList : [];
+  const totalCalories = eatenList.reduce((sum, it) => {
+    const c = Number(it.calories) || 0;
+    const q = Number(it.quantity) || 1;
+    return sum + c * q;
+  }, 0);
+  res.render('searchFood', { foodarray: [], eatenList, totalCalories });
+});
 
 app.get('/newPost', (req, res) => {
   res.render('newPost'); 
