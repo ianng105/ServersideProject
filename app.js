@@ -542,6 +542,51 @@ function calculateTDEE(bmr, activity) {
   return bmr * factor;
 }
 
+//111
+// GET 体测信息页面（显示已填写的数据）
+app.get('/bodyInfo', async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect('/login');
+  }
+
+  try {
+    // 注意：这里用 req.session.userId（你登录时存的就是这个）
+    const userBody = await Userbody.findUserBodyByUserId(req.session.userId);
+    res.render('bodyInfo', { 
+      userBody: userBody || {}   // 没数据就传空对象，避免模板报错
+    });
+  } catch (err) {
+    console.error('加载体测信息失败:', err);
+    res.render('bodyInfo', { userBody: {} });
+  }
+});
+
+// POST 保存或更新体测信息（表单提交到这里）
+app.post('/bodyInfo', async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.redirect('/login');
+  }
+
+  const userId = req.session.userId;   // 关键：你登录时存的就是 userId
+
+  try {
+    const existing = await Userbody.findUserBodyByUserId(userId);
+
+    if (existing) {
+      // 已存在 → 更新
+      await Userbody.updateUserBody(userId, req.body);
+    } else {
+      // 不存在 → 新建（必须把 userId 传进去）
+      const data = { ...req.body, userId };
+      await Userbody.createUserBody(data);
+    }
+
+    res.redirect('/bodyInfo');
+  } catch (err) {
+    console.error('保存体测信息失败:', err);
+    res.status(500).send('保存失败，请重试');
+  }
+});
 
 // 启动服务器
 async function start() {
