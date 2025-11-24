@@ -2,109 +2,94 @@ const { MongoClient, ObjectId } = require('mongodb');
 const { getDB } = require("./mongo");
 const collectionName = "userbody";
 
+class Userbody {
+  static async getCollection() {
+    const db = getDB();
+    return db.collection(collectionName);
+  }
 
+  // ================ 创建 ================
+  static async createUserBody(userBodyData) {
+    const collection = await Userbody.getCollection();
 
-class Userbody{
-	// 连接数据库并获取集合
-	  static async getCollection() {
-	    const db = getDB();
-	    return await db.collection(collectionName);
-	  }
+    const dataToInsert = {
+      userId: userBodyData.userId ? new ObjectId(userBodyData.userId) : null,
+      height: userBodyData.height ? Number(userBodyData.height) : null,
+      weight: userBodyData.weight ? Number(userBodyData.weight) : null,
+      gender: userBodyData.gender || null,
+      birthday: userBodyData.birthday ? new Date(userBodyData.birthday) : null,
+      activityLevel: userBodyData.activityLevel || null,
+      goal: userBodyData.goal || null,
+      TDEE: userBodyData.TDEE != null ? Number(userBodyData.TDEE) : null,
+      maximumIntake: userBodyData.maximumIntake != null ? Number(userBodyData.maximumIntake) : null,
+      minimumIntake: userBodyData.minimumIntake != null ? Number(userBodyData.minimumIntake) : null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
 
+    const result = await collection.insertOne(dataToInsert);
+    return { ...dataToInsert, _id: result.insertedId };
+  }
 
-	static async  createUserBody(userBodyData) {
-	  const collection = await Userbody.getCollection();
-	 
-	    // userId 是关联用户的 _id，必须传入
-	    const dataToInsert = {
-	      userId: ObjectId.createFromHexString(userBodyData.userId.toString()),
-	      height: Number(userBodyData.height) || null,
-	      weight: Number(userBodyData.weight) || null,
-	      gender: userBodyData.gender || null,
-	      birthday: userBodyData.birthday ? new Date(userBodyData.birthday) : null,
-	      activityLevel: userBodyData.activity || null,
-	      goal: userBodyData.goal || null,
-		  TDEE:userBodyData.TDEE!= null ?Number(userBodyData.TDEE): null,
-		  maximumIntake:userBodyData.maximumIntake != null ?Number(userBodyData.maximumIntake) : null,
-		  minimumIntake:userBodyData.minimumIntake != null ?Number(userBodyData.minimumIntake) : null,
-	      createdAt: new Date(),
-	      updatedAt: new Date()
-	    };
+  // ================ 查所有（调试用） ================
+  static async findAllUserBodies() {
+    const collection = await Userbody.getCollection();
+    return await collection.find({}).toArray();
+  }
 
-	    const result = await collection.insertOne(dataToInsert);
-	    return { ...dataToInsert, _id: result.insertedId };
-	 
-	}
+  // ================ 按 MongoDB _id 查（极少用但保留） ================
+  static async findUserBodyById(id) {
+    const collection = await Userbody.getCollection();
+    return await collection.findOne({ _id: new ObjectId(id) });
+  }
 
-	// 查询所有用户的身体信息（管理员用，通常用于调试）
-	static async findAllUserBodies() {
-	  const collection = await Userbody.getCollection();
-	  return await collection.find().toArray();
-	}
+  // ================ 按登录用户 userId 查（最常用） ================
+  static async findUserBodyByUserId(userId) {
+    if (!userId) return null;
+    const collection = await Userbody.getCollection();
+    return await collection.findOne({ userId: new ObjectId(userId) });
+  }
 
-	// 根据 MongoDB _id 查询（极少用）
-	static async  findUserBodyById(id) {
-	  const collection = await getCollection();
-	    return await collection.findOne({ _id: new ObjectId(id) });
+  // ================ 更新 ================
+  static async updateUserBody(userId, updateData) {
+    if (!userId) return false;
+    const collection = await Userbody.getCollection();
 
-	}
+    const cleanData = {};
+    if (updateData.height !== undefined) cleanData.height = Number(updateData.height) || null;
+    if (updateData.weight !== undefined) cleanData.weight = Number(updateData.weight) || null;
+    if (updateData.gender !== undefined) cleanData.gender = updateData.gender || null;
+    if (updateData.birthday !== undefined) cleanData.birthday = updateData.birthday ? new Date(updateData.birthday) : null;
+    if (updateData.activityLevel !== undefined) cleanData.activityLevel = updateData.activityLevel || null;
+    if (updateData.goal !== undefined) cleanData.goal = updateData.goal || null;
+    if (updateData.TDEE !== undefined) cleanData.TDEE = updateData.TDEE != null ? Number(updateData.TDEE) : null;
+    if (updateData.maximumIntake !== undefined) cleanData.maximumIntake = updateData.maximumIntake != null ? Number(updateData.maximumIntake) : null;
+    if (updateData.minimumIntake !== undefined) cleanData.minimumIntake = updateData.minimumIntake != null ? Number(updateData.minimumIntake) : null;
 
-	// 【核心】根据登录用户 ID 查询身体信息（前端最常用）
-	static async  findUserBodyByUserId(userId) {
-	  const collection = await Userbody.getCollection();
-	 
-	    return await collection.findOne({ 
-	      userId: ObjectId.createFromHexString(userId.toString()) 
-	    });
-	
-	}
+    cleanData.updatedAt = new Date();
 
-	// 更新用户身体信息（支持部分更新）
-	static async updateUserBody(userId, updateData) {
-	  const collection = await Userbody.getCollection();
-	  
-	    const cleanData = {};
-	    // 只更新传入的字段，并做类型转换
-	    if (updateData.height !== undefined) cleanData.height = Number(updateData.height) || null;
-	    if (updateData.weight !== undefined) cleanData.weight = Number(updateData.weight) || null;
-	    if (updateData.gender !== undefined) cleanData.gender = updateData.gender || null;
-	    if (updateData.birthday !== undefined) cleanData.birthday = updateData.birthday ? new Date(updateData.birthday) : null;
-	    if (updateData.activityLevel !== undefined) cleanData.activityLevel = updateData.activityLevel || null;
-	    if (updateData.goal !== undefined) cleanData.goal = updateData.goal || null;
-		if (updateData.TDEE !== undefined) cleanData.TDEE = updateData.TDEE != null ? Number(updateData.TDEE) : null;
-  		if (updateData.maximumIntake !== undefined) cleanData.maximumIntake = updateData.maximumIntake != null ? Number(updateData.maximumIntake) : null;
-  		if (updateData.minimumIntake !== undefined) cleanData.minimumIntake = updateData.minimumIntake != null ? Number(updateData.minimumIntake) : null;
+    const result = await collection.updateOne(
+      { userId: new ObjectId(userId) },
+      { $set: cleanData }
+    );
 
+    return result.matchedCount > 0;
+  }
 
-	    cleanData.updatedAt = new Date();
-
-	    const result = await collection.updateOne(
-	      { userId: ObjectId.createFromHexString(userId.toString()) },
-	      { $set: cleanData }
-	    );
-
-	    return result.modifiedCount > 0 || result.matchedCount > 0;
-
-	}
-
-	// 删除用户身体信息（用户注销时调用）
-	static async  deleteUserBody(userId) {
-	  const collection = await getCollection();
-	  
-	    const result = await collection.deleteOne({ 
-	      userId: ObjectId.createFromHexString(userId.toString()) 
-	    });
-	    return result.deletedCount > 0;
-
-	}
+  // ================ 删除 ================
+  static async deleteUserBody(userId) {
+    if (!userId) return false;
+    const collection = await Userbody.getCollection();
+    const result = await collection.deleteOne({ userId: new ObjectId(userId) });
+    return result.deletedCount > 0;
+  }
 }
+
 module.exports = {
   createUserBody: Userbody.createUserBody,
   findAllUserBodies: Userbody.findAllUserBodies,
   findUserBodyById: Userbody.findUserBodyById,
-  findUserBodyByUserId: Userbody.findUserBodyByUserId,      // 最常用
-  updateUserBody: Userbody.updateUserBody,            // 最常用
+  findUserBodyByUserId: Userbody.findUserBodyByUserId,
+  updateUserBody: Userbody.updateUserBody,
   deleteUserBody: Userbody.deleteUserBody
 };
-
-
