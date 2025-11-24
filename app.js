@@ -597,16 +597,80 @@ app.post('/bodyInfo', async (req, res) => {
   const userId = req.session.userId;
 
   try {
+    // 1. 取出用户真正能改的6个字段
+    const { height, weight, gender, birthday, activityLevel, goal } = req.body;
+
+    // 2. 计算年龄（你原来就有的函数）
+    const getAge = (birthDate) => {
+      if (!birthDate) return null;
+      const today = new Date();
+      const birth = new Date(birthDate);
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+      return age;
+    };
+
+    const age = birthday ? getAge(birthday) : null;
+
+    // 3. 计算 BMR 和 TDEE（你原来就有的函数，直接用）
+    let TDEE = null;
+    let maximumIntake = null;
+    let minimumIntake = null;
+
+    if (height && weight && gender && age && activityLevel) {
+      const bmr = gender === 'male'
+        ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+        : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+
+      const activityFactors = {
+        sedentary: 1.2,
+        light: 1.375,
+        moderate: 1.55,
+        active: 1.725,
+        very_active: 1.9
+      };
+
+      TDEE = Math.round(bmr * (activityFactors[activityLevel] || 1.2));
+
+      // 根据目标计算建议摄入范围
+      if (goal === 'lose') {
+        maximumIntake = TDEE - 200;
+        minimumIntake = TDEE - 500;
+      } else if (goal === 'gain') {
+        maximumIntake = TDEE + 500;
+        minimumIntake = TDEE + 200;
+      } else {
+        maximumIntake = TDEE;
+        minimumIntake = TDEE;
+      }
+    }
+
+    // 4. 构造干净的要保存的数据（这三个是我们算好的！）
+    const dataToSave = {
+      height: height ? Number(height) : null,
+      weight: weight ? Number(weight) : null,
+      gender: gender || null,
+      birthday: birthday ? new Date(birthday) : null,
+      activityLevel: activityLevel || null,
+      goal: goal || null,
+      TDEE,
+      maximumIntake,
+      minimumIntake
+    };
+
+    // 5. 保存或更新
     const existing = await Userbody.findUserBodyByUserId(userId);
     if (existing) {
-      await Userbody.updateUserBody(userId, req.body);
+      await Userbody.updateUserBody(userId, dataToSave);
     } else {
-      await Userbody.createUserBody({ userId, ...req.body });
+      await Userbody.createUserBody({ userId, ...dataToSave });
     }
+
     res.redirect('/bodyInfo');
   } catch (err) {
     console.error('保存体测数据失败:', err);
-    res.status(500).send('保存失败');
+    res.status(500).send('保存失败，请重试');
   }
 });
 
