@@ -125,6 +125,7 @@
   </style>
 </head>
 <body>
+
   <div class="container">
     <!-- 顶部导航 -->
     <nav class="nav">
@@ -161,6 +162,9 @@
         <div class="info-grid">
           <strong>Email:</strong> <span><%= user.email %></span>
         </div>
+        <form method="POST" action="/delete">
+        	<button type=submit>Delete Account</button>
+        </form>
         <% if (user.height || user.weight || user.gender || user.birthday || user.goal || user.TDEE || user.minimumIntake || user.maximumIntake) { %>
           <div style="margin-top: 10px; font-style: italic; color: var(--muted);">Body Information (only visible if set):</div>
           <% if (user.height) { %>
@@ -237,5 +241,6 @@
       </section>
     </div>
   </div>
+
 </body>
 </html>
