@@ -97,25 +97,34 @@
 
         <!-- 修改3：只读字段自动显示计算结果 -->
         <div class="field">
-          <label for="TDEE">TDEE (kcal/day)</label>
-          <input type="number" id="TDEE" name="TDEE" readonly
-                 value="<%= userBody.TDEE ? Math.round(userBody.TDEE) : '' %>"/>
+          <label>TDEE (kcal/day)</label>
+          <input type="number" id="TDEE" readonly 
+                 value="<%= userBody.TDEE ? Math.round(userBody.TDEE) : '' %>"
+                 style="background:#f8f9fa; color:#e74c3c; font-weight:bold; font-size:1.1em;" />
+          <div class="hint">每日总能量消耗（自动计算）</div>
         </div>
+
         <div class="field">
-          <label for="maximumIntake">Maximum Intake (kcal)</label>
-          <input type="number" id="maximumIntake" name="maximumIntake" readonly
-                 value="<%= userBody.maximumIntake || '' %>"/>
+          <label>Maximum Intake (kcal)</label>
+          <input type="number" id="maximumIntake" readonly 
+                 value="<%= userBody.maximumIntake || '' %>"
+                 style="background:#f8f9fa; color:#27ae60; font-weight:bold;" />
+          <div class="hint">建议最高摄入（含盈余）</div>
         </div>
+
         <div class="field">
-          <label for="minimumIntake">Minimum Intake (kcal)</label>
-          <input type="number" id="minimumIntake" name="minimumIntake" readonly
-                 value="<%= userBody.minimumIntake || '' %>"/>
+          <label>Minimum Intake (kcal)</label>
+          <input type="number" id="minimumIntake" readonly 
+                 value="<%= userBody.minimumIntake || '' %>"
+                 style="background:#f8f9fa; color:#27ae60; font-weight:bold;" />
+          <div class="hint">建议最低摄入（含赤字）</div>
         </div>
         
         <div class="actions full">
           <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
-          <!-- 修改4：按钮类型改成 submit -->
-          <button type="submit" class="btn btn-primary">Save & Update</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-save"></i> Save & Recalculate
+          </button>
         </div>
       </form>
     </section>
