@@ -125,6 +125,7 @@ app.get('/main', async (req, res) => {
     const posts = rawPosts.map(p => ({
       ...p,
       user: { username: p.username || '匿名用户' },
+      avatar:p.avatar,
       image: p.image || null,
       caption: typeof p.caption === 'string' ? p.caption : '',
       healthyJudge:p.healthyJudge
@@ -290,14 +291,8 @@ app.post('/updateProfile', upload.single('avatar'), async (req, res) => {
       if (existing) {
         return res.redirect('/editProfile?error=usernameExists');
       }
-      const newUsername = req.body.newUsername;
       userUpdates.username = req.body.newUsername;
       req.session.username = req.body.newUsername;
-      await Post.updateMany(
-        { username: username },
-        { $set: { username: newUsername } }
-  );
-  req.session.username = newUsername;
     }
     if (req.body.newEmail && req.body.newEmail !== user.email) {
       userUpdates.email = req.body.newEmail;
@@ -433,6 +428,9 @@ app.post('/newPost', uploadPost.single('image'),async (req, res) => {
       return res.redirect('/login');
     }
     const username = req.session.username;
+    const currentUser=await User.findUserByUsername(username);
+    const avatar=currentUser.avatar;
+    console.log(avatar);
     const { caption, image } = req.body; // newPost.ejs 中的 name 需对应
 
     // 从 session 取已吃列表与总热量，作为快照保存到帖子（可选）
@@ -461,7 +459,7 @@ app.post('/newPost', uploadPost.single('image'),async (req, res) => {
     
     const postData = {
       username,
-      //userUpdates.avatar = '/uploads/avatars/' + req.file.filename;
+      avatar,
       image: req.file ? '/uploads/images/'+req.file.filename : null,
       caption: typeof caption == 'string' ? caption : '',
       eatenListSnapshot: eatenList,              // 可选
