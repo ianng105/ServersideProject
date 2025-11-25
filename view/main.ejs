@@ -30,11 +30,10 @@
       padding: 14px 16px;
     }
     .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #eee;
+     width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
     }
     .username {
       font-weight: 600;
@@ -157,7 +156,7 @@ text-decoration: none;
 .feed{ max-width:820px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
 .layout{
   display:grid;
-  grid-template-columns: 230px 1fr 500px; 
+  grid-template-columns: 230px 1fr 300px; 
   gap: 50px;
   min-height: 100dvh;
   align-items:start;
@@ -245,11 +244,7 @@ white-space: pre-wrap;
 .list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding-right:4px;}
   .diet-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff;}
   .diet-name{font-weight:700;font-size:13.5px;margin:0 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .text-red-600     { color: #dc2626 !important; }
-.text-amber-600   { color: #d97706 !important; }
-.text-emerald-600 { color: #059669 !important; }
   </style>
-
 </head>
 <body>
   <a href="/userProfile" class="floating-profile-btn" title="Profile">
@@ -301,7 +296,7 @@ white-space: pre-wrap;
               </div>
             <header class="post-header">
               <img class="avatar" src="<%=post.avatar|| '/uploads/avatars/defaulticon.jpeg' %>" alt="avatar" />
-              <div class="username"><%= post.user && post.user.username ? post.user.username : '匿名用户' %></div>
+              <div class="username"><%=  post.user.username ? post.user.username : '匿名用户' %></div>
               <div><%=post.healthyJudge%></div>
               <% if(post.healthyJudge=="Healthy"){%>
               	<img src="/healthy.png" height="40px" width="40px">
@@ -350,58 +345,68 @@ white-space: pre-wrap;
   </main>
 
   <!-- 右侧：记录饮食区域（从左侧移过来） -->
-  <aside class="right-rail" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.06); max-width:380px; margin-left:auto;">
-    <section class="diet-card" aria-label="记录饮食">
-      <div class="diet-header" style="display:flex;align-items:center;justify-content:space-between;">
-        <h3 class="diet-title">Food Record</h3>
-       <div class="diet-total">
-          Total Calories Today：
-          <% 
-            const todayCal = typeof totalCalories !== 'undefined' ? totalCalories : 0;
-            let colorClass = 'text-emerald-600';
-            if (todayCal > 1300)      colorClass = 'text-red-600';
-            else if (todayCal >= 500) colorClass = 'text-amber-600';
-          %>
-          <strong class="<%= colorClass %>" style="font-size:32px; font-weight:900;">
-            <%= todayCal %>
-          </strong>
-          <span style="font-size:18px; color:#6b7280; margin-left:4px;">kcal</span>
-        </div>
-      </div>
+ <aside class="right-rail" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.06); max-width:380px; margin-left:auto;">
+   <section class="diet-card" aria-label="记录饮食">
 
-      <div class="list">
-        <% if (Array.isArray(eatenList) && eatenList.length > 0) { %>
-          <% eatenList.forEach(item => { %>
-            <div class="diet-item">
-              <div>
-                <p class="diet-name"><%= item.food_name %></p>
-                <div class="muted">
-                  <%= Number(item.calories) || 0 %> kcal/portion
-                  · portion：<%= Number(item.quantity) || 1 %>
-                  · sum：<%= (Number(item.calories)||0) * (Number(item.quantity)||1) %> kcal
-                </div>
-              </div>
-              <form action="/eaten/remove" method="post">
-                <input type="hidden" name="id" value="<%= item.id %>">
-                
-              </form>
-            </div>
-          <% }) %>
-        <% } else { %>
-          <div class="diet-item" style="border-style:dashed;">
-            <div>
-              <p class="diet-name">Not record yet</p>
-              
-            </div>
-          </div>
-        <% } %>
-      </div>
+     <!-- 这一块只做竖排，不要任何 flex -->
+     <div class="diet-header" style="display:block;">
+       <h3 class="diet-title" style="margin:0 0 4px; display:block;">Food Record</h3>
 
-      <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
-        <a class="btn btn-primary" href='/searchFood'>Go to add</a>
-      </div>
-    </section>
-  </aside>
-</div>
+       <!-- 这里用 <p> 每行一个，强制换行 -->
+       <p style="margin:0; display:block;">Total</p>
+       <p style="margin:0; display:block;">Calories</p>
+       <p style="margin:0; display:block;">
+         Today:
+         <strong><%= typeof totalCalories !== 'undefined' ? totalCalories : 0 %></strong> kcal
+       </p>
+
+       
+     </div>
+
+     <!-- 下面整体：记录列表 + 按钮（竖排） -->
+     <div class="diet-body" style="margin-top:16px; display:block;">
+       <div class="list">
+         <% if (Array.isArray(eatenList) && eatenList.length > 0) { %>
+           <% eatenList.forEach(item => { %>
+             <div class="diet-item">
+               <div>
+                 <p class="diet-name"><%= item.food_name %></p>
+                 <div class="muted">
+                   <%= Number(item.calories) || 0 %> kcal/portion
+                   · portion：<%= Number(item.quantity) || 1 %>
+                   · sum：<%= (Number(item.calories)||0) * (Number(item.quantity)||1) %> kcal
+                 </div>
+               </div>
+               <form action="/eaten/remove" method="post">
+                 <input type="hidden" name="id" value="<%= item.id %>">
+               </form>
+             </div>
+           <% }) %>
+         <% } else { %>
+           <div class="diet-item" style="border-style:dashed;">
+             <div>
+               <p class="diet-name">Not record yet</p>
+             </div>
+           </div>
+         <% } %>
+       </div>
+
+       <div style="margin-top:8px; display:flex; justify-content:flex-end; gap:8px;">
+         <a class="btn btn-primary" href="/searchFood">Go to add</a>
+       </div>
+     </div>
+
+   </section>
+ </aside>
+
+       
+
 </body>
 </html>
+
+
+
+
+
+
+
