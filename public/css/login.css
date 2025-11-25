@@ -95,3 +95,16 @@
 
     /* 让页面元素居中并留白 */
     .stack{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.register-link {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.register-link a {
+  color: blue;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
