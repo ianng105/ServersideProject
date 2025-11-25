@@ -364,47 +364,7 @@ app.post('/updateProfile', upload.single('avatar'), async (req, res) => {
       await User.updateUser(user._id, userUpdates);
     }
 
-    // 更新用户身体信息
-    const bodyUpdates = {
-      height: req.body.height ? Number(req.body.height) : null,
-      weight: req.body.weight ? Number(req.body.weight) : null,
-      gender: req.body.gender || null,
-      birthday: req.body.birthday ? new Date(req.body.birthday) : null,
-      activityLevel: req.body.activity || null,
-      goal: req.body.goal || null
-    };
-    const bmr = calculateBMR({
-      gender: bodyUpdates.gender,
-      height: bodyUpdates.height,
-      weight: bodyUpdates.weight,
-      birthday: bodyUpdates.birthday
-    });
-    if (bmr) {
-      const tdee = calculateTDEE(bmr, bodyUpdates.activityLevel);
-      if (tdee) {
-        bodyUpdates.TDEE = Math.round(tdee);
-        if (bodyUpdates.goal) {
-          const goal = bodyUpdates.goal.toLowerCase();
-          if (goal.includes('gain')) {
-            bodyUpdates.maximumIntake = tdee + 500;
-            bodyUpdates.minimumIntake = tdee + 200;
-          } else if (goal.includes('lose')) {
-            bodyUpdates.maximumIntake = tdee - 200;
-            bodyUpdates.minimumIntake = tdee - 500;
-          } else {
-            bodyUpdates.maximumIntake = tdee;
-            bodyUpdates.minimumIntake = tdee;
-          }
-        }
-      }
-    }
-    const existingBody = await Userbody.findUserBodyByUserId(user._id);
-    if (existingBody) {
-      await Userbody.updateUserBody(user._id, bodyUpdates);
-    } else if (Object.keys(bodyUpdates).some(key => bodyUpdates[key] !== null && bodyUpdates[key] !== undefined)) {
-      await Userbody.createUserBody({ ...bodyUpdates, userId: user._id });
-    }
-
+    
     res.redirect('/userProfile?success=updated');
   } catch (err) {
     console.error('更新资料失败:', err);
