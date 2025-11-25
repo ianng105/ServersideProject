@@ -23,6 +23,61 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
+
+  
+}
+
+
+.wave-container {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* 确保在内容下方 */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 多层波浪叠加形成高低起伏感 */
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-position: bottom;
+  animation: waveFlow 15s linear infinite;
+  opacity: 0.12; /* 透明效果 */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); /* 阴影增强层次感 */
+}
+
+/* 第一层波浪（底层） */
+.wave-1 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230a66ff' d='M0,192L48,186.7C96,181,192,171,288,181.3C384,192,480,224,576,213.3C672,203,768,149,864,138.7C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: 50% 300px;
+  bottom: -50px;
+  animation-delay: 0s;
+}
+
+/* 第二层波浪（中层） */
+.wave-2 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230b5ae0' d='M0,128L48,144C96,160,192,192,288,197.3C384,203,480,181,576,181.3C672,181,768,203,864,197.3C960,192,1056,160,1152,138.7C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: 50% 250px;
+  bottom: -30px;
+  animation-delay: -3s;
+  opacity: 0.08;
+}
+
+/* 第三层波浪（上层） */
+.wave-3 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2322c1c3' d='M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,229.3C672,235,768,213,864,186.7C960,160,1056,128,1152,133.3C1248,139,1344,181,1392,202.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: 50% 200px;
+  bottom: 0;
+  animation-delay: -6s;
+  opacity: 0.06;
+}
+
+/* 波浪流动动画 */
+@keyframes waveFlow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* 入口整体淡入 */
@@ -34,12 +89,15 @@ body{
   padding:24px 14px 32px;
   animation:pageFadeIn .6s var(--ease-soft) both;
 }
-.phone{
-  width:100%;
-  max-width:var(--maxw);
-  transform:translateY(8px);
-  opacity:0;
-  animation:cardFloatIn .7s var(--ease-soft) .1s forwards;
+.phone {
+  position: relative; /* 新增 */
+  z-index: 1; /* 确保内容在水浪上方 */
+  /* 保留原有样式 */
+  width: 100%;
+  max-width: var(--maxw);
+  transform: translateY(8px);
+  opacity: 0;
+  animation: cardFloatIn .7s var(--ease-soft) .1s forwards;
 }
 @keyframes pageFadeIn{
   from{opacity:0;transform:translateY(10px)}
