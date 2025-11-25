@@ -29,6 +29,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+const storagePost = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // 确保路径是 public/uploads/avatars（与实际文件夹一致）
+    cb(null, 'public/uploads/images');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, 'image-' + uniqueSuffix + ext);
+  }
+});
+const uploadPost = multer({ storage: storagePost });
+
 const oa = new OAuth(
   null,
   null,
@@ -376,7 +389,7 @@ app.post('/delete', async (req, res) => {
 
 //----------------post---------------//
 // 提交新帖子（表单版本）
-app.post('/newPost', async (req, res) => {
+app.post('/newPost', uploadPost.single('image'),async (req, res) => {
   try {
     if (!req.session || !req.session.loggedIn) {
       return res.redirect('/login');
@@ -407,10 +420,11 @@ app.post('/newPost', async (req, res) => {
     else{
     	 healthyJudge="Fat";
     }
-
+    
     const postData = {
       username,
-      image: image || null, // 如果你没有实现图片上传，这里可先存 null 或一个占位
+      //userUpdates.avatar = '/uploads/avatars/' + req.file.filename;
+      image: '/uploads/images/'+req.file.filename,
       caption: typeof caption == 'string' ? caption : '',
       eatenListSnapshot: eatenList,              // 可选
       totalCaloriesSnapshot: totalCalories,    
@@ -419,7 +433,7 @@ app.post('/newPost', async (req, res) => {
     };
 
     await Post.createPost(postData);
-
+	console.log(postData.iamge);
     // 发帖成功后跳转主页
     return res.redirect('/main');
   } catch (err) {
