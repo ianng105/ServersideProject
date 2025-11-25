@@ -78,10 +78,15 @@ app.use(cors({
 }));
 
 // Session 配置
+const MongoStore = require('connect-mongo');
 app.use(session({
   secret: 'your-secret-key-here',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    ttl: 24 * 60 * 60   // session 有效期（秒）
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000
