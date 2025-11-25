@@ -424,7 +424,7 @@ app.post('/newPost', uploadPost.single('image'),async (req, res) => {
     const postData = {
       username,
       //userUpdates.avatar = '/uploads/avatars/' + req.file.filename;
-      image: '/uploads/images/'+req.file.filename,
+      image: req.file ? '/uploads/images/'+req.file.filename : null,
       caption: typeof caption == 'string' ? caption : '',
       eatenListSnapshot: eatenList,              // 可选
       totalCaloriesSnapshot: totalCalories,    
