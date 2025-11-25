@@ -17,6 +17,7 @@
     "mongoose": "^7.0.0",
     "oauth": "^0.10.2",
     "cors": "^2.8.5",
-    "multer":"*"
+    "multer":"*",
+    "method-override":"*"
   }
 }
