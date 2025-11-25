@@ -236,6 +236,12 @@ margin: 8px 0 4px;
 white-space: pre-wrap;
 
 }
+.post-time {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px; /* 与内容保持间距 */
+}
+
 .list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding-right:4px;}
   .diet-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff;}
   .diet-name{font-weight:700;font-size:13.5px;margin:0 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -286,6 +292,9 @@ white-space: pre-wrap;
       <% if (posts && posts.length > 0) { %>
         <% posts.forEach(post => { %>
           <article class="post-card">
+            <div class="post-time">
+             <%= new Date(post.date).toLocaleString() %>
+              </div>
             <header class="post-header">
               <img class="avatar" src="<%= (post.user && post.user.avatar) ? post.user.avatar : '/images/avatar.jpg' %>" alt="avatar" />
               <div class="username"><%= post.user && post.user.username ? post.user.username : '匿名用户' %></div>
