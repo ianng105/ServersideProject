@@ -13,6 +13,56 @@
     </div>
 
     <form action="/updateProfile" method="POST" enctype="multipart/form-data">
+    <!-- 在 editProfile.ejs 的 form 中添加以下内容 -->
+    <div class="field">
+      <label class="label" for="height">Height (cm)</label>
+      <input type="number" id="height" name="height" 
+            value="<%= user.height || '' %>" class="input">
+    </div>
+
+    <div class="field">
+      <label class="label" for="weight">Weight (kg)</label>
+      <input type="number" id="weight" name="weight" 
+            value="<%= user.weight || '' %>" class="input">
+    </div>
+
+    <div class="field">
+      <label class="label" for="gender">Gender</label>
+      <select id="gender" name="gender" class="input">
+        <option value="">Select</option>
+        <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Male</option>
+        <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="label" for="birthday">Birthday</label>
+      <input type="date" id="birthday" name="birthday" 
+            value="<%= user.birthday || '' %>" class="input">
+    </div>
+
+    <div class="field">
+      <label class="label" for="activity">Activity Level</label>
+      <select id="activity" name="activity" class="input">
+        <option value="">Select</option>
+        <option value="sedentary" <%= user.activity === 'sedentary' ? 'selected' : '' %>>Sedentary</option>
+        <option value="light" <%= user.activity === 'light' ? 'selected' : '' %>>Light</option>
+        <option value="moderate" <%= user.activity === 'moderate' ? 'selected' : '' %>>Moderate</option>
+        <option value="active" <%= user.activity === 'active' ? 'selected' : '' %>>Active</option>
+        <option value="very_active" <%= user.activity === 'very_active' ? 'selected' : '' %>>Very Active</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="label" for="goal">Fitness Goal</label>
+      <select id="goal" name="goal" class="input">
+        <option value="">Select</option>
+        <option value="lose" <%= user.goal === 'lose' ? 'selected' : '' %>>Lose Fat</option>
+        <option value="gain" <%= user.goal === 'gain' ? 'selected' : '' %>>Gain Muscle</option>
+        <option value="maintain" <%= user.goal === 'maintain' ? 'selected' : '' %>>Maintain Weight</option>
+      </select>
+    </div>
+
       <div class="field">
         <label class="label" for="username">Username</label>
         <input type="text" id="username" name="newUsername" 
