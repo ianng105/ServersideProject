@@ -346,49 +346,59 @@ white-space: pre-wrap;
   </main>
 
   <!-- 右侧：记录饮食区域（从左侧移过来） -->
-  <aside class="right-rail" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.06); max-width:380px; margin-left:auto;">
-    <section class="diet-card" aria-label="记录饮食">
-      <div class="diet-header" style="display:flex;align-items:center;justify-content:space-between;">
-        <h3 class="diet-title">Food Record</h3>
-        <div class="diet-total">
-          Total Calories Today：<strong><%= typeof totalCalories !== 'undefined' ? totalCalories : 0 %></strong> kcal
-        </div>
-      </div>
+ <aside class="right-rail" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.06); max-width:380px; margin-left:auto;">
+   <section class="diet-card" aria-label="记录饮食">
 
-      <div class="list">
-        <% if (Array.isArray(eatenList) && eatenList.length > 0) { %>
-          <% eatenList.forEach(item => { %>
-            <div class="diet-item">
-              <div>
-                <p class="diet-name"><%= item.food_name %></p>
-                <div class="muted">
-                  <%= Number(item.calories) || 0 %> kcal/portion
-                  · portion：<%= Number(item.quantity) || 1 %>
-                  · sum：<%= (Number(item.calories)||0) * (Number(item.quantity)||1) %> kcal
-                </div>
-              </div>
-              <form action="/eaten/remove" method="post">
-                <input type="hidden" name="id" value="<%= item.id %>">
-                
-              </form>
-            </div>
-          <% }) %>
-        <% } else { %>
-          <div class="diet-item" style="border-style:dashed;">
-            <div>
-              <p class="diet-name">Not record yet</p>
-              
-            </div>
-          </div>
-        <% } %>
-      </div>
+     <!-- 这一块只做竖排，不要任何 flex -->
+     <div class="diet-header" style="display:block;">
+       <h3 class="diet-title" style="margin:0 0 4px; display:block;">Food Record</h3>
 
-      <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
-        <a class="btn btn-primary" href='/searchFood'>Go to add</a>
-      </div>
-    </section>
-  </aside>
-</div>
+       <!-- 这里用 <p> 每行一个，强制换行 -->
+       <p style="margin:0; display:block;">Total</p>
+       <p style="margin:0; display:block;">Calories</p>
+       <p style="margin:0; display:block;">
+         Today:
+         <strong><%= typeof totalCalories !== 'undefined' ? totalCalories : 0 %></strong> kcal
+       </p>
+
+       
+     </div>
+
+     <!-- 下面整体：记录列表 + 按钮（竖排） -->
+     <div class="diet-body" style="margin-top:16px; display:block;">
+       <div class="list">
+         <% if (Array.isArray(eatenList) && eatenList.length > 0) { %>
+           <% eatenList.forEach(item => { %>
+             <div class="diet-item">
+               <div>
+                 <p class="diet-name"><%= item.food_name %></p>
+                 <div class="muted">
+                   <%= Number(item.calories) || 0 %> kcal/portion
+                   · portion：<%= Number(item.quantity) || 1 %>
+                   · sum：<%= (Number(item.calories)||0) * (Number(item.quantity)||1) %> kcal
+                 </div>
+               </div>
+               <form action="/eaten/remove" method="post">
+                 <input type="hidden" name="id" value="<%= item.id %>">
+               </form>
+             </div>
+           <% }) %>
+         <% } else { %>
+           <div class="diet-item" style="border-style:dashed;">
+             <div>
+               <p class="diet-name">Not record yet</p>
+             </div>
+           </div>
+         <% } %>
+       </div>
+
+       <div style="margin-top:8px; display:flex; justify-content:flex-end; gap:8px;">
+         <a class="btn btn-primary" href="/searchFood">Go to add</a>
+       </div>
+     </div>
+
+   </section>
+ </aside>
 
        
 
