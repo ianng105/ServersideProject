@@ -55,6 +55,10 @@ class Post{
     return result.modifiedCount > 0;
   
 }
+static async updateMany(filter, updateData) {
+  const collection = await Post.getCollection();
+  return await collection.updateMany(filter, updateData);
+}
 
 // 删除帖子
   static async deletePost(id) {
@@ -73,4 +77,5 @@ module.exports = {
   findPostByUsername:Post.findPostByUsername,
   updatePost:Post.updatePost,
   deletePost:Post.deletePost,
+  updateMany: Post.updateMany,
 };
