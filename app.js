@@ -113,6 +113,21 @@ app.get('/searchCalories', (req, res) => {
     }
   );
 });
+app.get('/editPost/:id', async (req, res) => {
+  if (!req.session.loggedIn) return res.redirect('/login');
+
+  const postId = req.params.id;
+  const post = await Post.findPostById(postId);
+
+  if (!post || post.username !== req.session.username) {
+    return res.status(403).send("无权限编辑该帖子");
+  }
+
+  res.render('newPost', {
+    editing: true,
+    post
+  });
+});
 
 // 主页（显示帖子 + 同步用户数据到前端）
 app.get('/main', async (req, res) => {
@@ -151,6 +166,8 @@ app.get('/bodyInfoForm', (req, res) => {
   res.render('bodyInfoForm');
 });
 
+
+
 // 登出
 app.get('/logout', (req, res) => {
   req.session.destroy(err => {
@@ -187,7 +204,7 @@ app.get('/searchFood', (req, res) => {
 
 // 新建帖子页面
 app.get('/newPost', (req, res) => {
-  res.render('newPost');
+ res.render('newPost', { editing: false, post: {} });
 });
 
 // 个人资料页
@@ -269,6 +286,34 @@ app.post('/posts/:id/delete', async (req, res) => {
   } catch (err) {
     console.error('删除帖子失败:', err);
     return res.redirect('/userProfile?error=server');
+  }
+});
+
+app.post('/updatePost/:id', uploadPost.single('image'), async (req, res) => {
+  try {
+    if (!req.session.loggedIn) return res.redirect('/login');
+
+    const postId = req.params.id;
+    const post = await Post.findPostById(postId);
+
+    if (!post || post.username !== req.session.username) {
+      return res.status(403).send("无权限编辑该帖子");
+    }
+
+    const updateData = {
+      caption: req.body.caption
+    };
+
+    if (req.file) {
+      updateData.image = '/uploads/images/' + req.file.filename;
+    }
+
+    await Post.updatePost(postId, updateData);
+
+    return res.redirect('/userProfile');
+  } catch (err) {
+    console.error("更新帖子失败:", err);
+    res.status(500).send("帖子更新失败，请重试");
   }
 });
 
