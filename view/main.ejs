@@ -292,6 +292,16 @@ white-space: pre-wrap;
             <header class="post-header">
               <img class="avatar" src="<%= (post.user && post.user.avatar) ? post.user.avatar : '/images/avatar.jpg' %>" alt="avatar" />
               <div class="username"><%= post.user && post.user.username ? post.user.username : '匿名用户' %></div>
+              <div><%=post.healthyJudge%></div>
+              <% if(post.healthyJudge=="Healthy"){%>
+              	<img src="/healthy.png" height="40px" width="40px">
+              <%}%>
+              <%if(post.healthyJudge=="Fat"){%>
+              	<img src="/fat.png" height="40px" width="40px">
+              <%}%>
+              <%if(post.healthyJudge=="Unhealthy"){%>
+              	<img src="/unhealthy.png" height="40px" width="40px">
+              <%}%>
             </header>
 
             <% if (post.image) { %>
