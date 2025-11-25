@@ -135,7 +135,11 @@
     <section class="card">
       <div class="card-header">
         <i class="fa-solid fa-pen-to-square"></i>
-        <div class="card-title">Create a New Health Post</div>
+        <div class="card-title"><% if (typeof editing !== 'undefined' && editing) { %>
+  Edit Post
+<% } else { %>
+  Create a New Health Post
+<% } %></div>
       </div>
 
       <!-- Submit to /newPost with multipart/form-data to support image upload -->
