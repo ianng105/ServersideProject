@@ -424,7 +424,8 @@ app.post('/register', async (req, res) => {
     if (exists) {
       return res.status(400).send('用户名已存在');
     }
-    await User.createUser({ username, email, password });
+    const newUser=await User.createUser({ username, email, password });
+    req.session.userId = newUser._id;
     req.session.email = email;
     req.session.username = username;
     req.session.loggedIn = true;
