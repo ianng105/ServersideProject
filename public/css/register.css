@@ -220,48 +220,93 @@ h1{
   transform:translateY(1px) scale(.96);
   box-shadow:0 3px 10px rgba(37,99,235,.25);
 }
-.cta{
-  flex:1;
-  max-width:720px;
-  height:56px;
-  border:none;
-  border-radius:28px;
-  background:var(--primary);
-  color:#fff;
-  font-size:20px;
-  font-weight:700;
-  letter-spacing:.2em;
-  cursor:pointer;
-  box-shadow:0 10px 22px rgba(47,98,241,.32);
-  position:relative;
-  overflow:hidden;
+/* 注册页主按钮：默认白底蓝字，悬浮蓝底白字 */
+/* 主按钮：默认白底蓝字，悬浮时蓝底白字 */
+.cta,
+.cta-btn {
+  flex: 1;
+  max-width: 720px;
+  height: 56px;
+  border-radius: 28px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  /* 默认状态：白底蓝字 */
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+
+  box-shadow: 0 10px 22px rgba(47, 98, 241, .08);
   transition:
     transform .15s ease,
     box-shadow .2s ease,
-    background .18s ease;
+    background .18s ease,
+    color .18s ease,
+    border-color .18s ease;
 }
-.cta:hover{
-  background:#264ddf;
-  transform:translateY(-1px);
-  box-shadow:0 16px 32px rgba(37,99,235,.36);
+
+/* 悬浮状态：蓝底白字 + 上浮 + 阴影增强 */
+.cta:hover,
+.cta-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(37, 99, 235, .36);
+  border-color: var(--primary);
 }
-.cta:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-  box-shadow:none;
-  transform:none;
-}
-.cta::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at 10% 0,rgba(255,255,255,.25) 0,transparent 50%);
-  opacity:.6;
-  pointer-events:none;
+
+/* 禁用状态：保持当前色，但去掉交互和阴影 */
+.cta:disabled,
+.cta-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 /* 小屏优化 */
 @media (max-width:420px){
   h1{font-size:24px}
   .cta{font-size:18px}
+}
+.cta-btn{
+  flex:1;
+  max-width:720px;
+  height:56px;
+  border-radius:28px;
+  border:2px solid var(--primary);
+  background:#fff;
+  color:var(--primary);
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:.2em;
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(47,98,241,.08);
+  position:relative;
+  overflow:hidden;
+  transition:
+    transform .15s ease,
+    box-shadow .2s ease,
+    background .18s ease,
+    color .18s ease,
+    border-color .18s ease;
+}
+
+.cta-btn:hover{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+  transform:translateY(-1px);
+  box-shadow:0 16px 32px rgba(47,98,241,.32);
+}
+
+.cta-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  box-shadow:none;
+  transform:none;
 }

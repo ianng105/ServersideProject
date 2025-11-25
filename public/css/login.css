@@ -152,8 +152,11 @@ body{
   transition:
     transform .12s ease,
     box-shadow .18s ease,
-    background .18s ease;
+    background .18s ease,
+    color .18s ease,
+    border-color .18s ease;
 }
+
 .btn::after{
   content:"";
   position:absolute;
@@ -166,24 +169,46 @@ body{
   transform:translate(-50%,-50%);
   opacity:0;
 }
+
 .btn:active::after{
   animation:rippleBtn .4s ease-out;
 }
+
 @keyframes rippleBtn{
-  0%{opacity:.4;width:0;height:0}
-  70%{opacity:.18;width:220%;height:220%}
-  100%{opacity:0;width:260%;height:260%}
+  0%{
+    opacity:.4;
+    width:0;
+    height:0;
+  }
+  70%{
+    opacity:.18;
+    width:220%;
+    height:220%;
+  }
+  100%{
+    opacity:0;
+    width:260%;
+    height:260%;
+  }
 }
+
+/* 主按钮：默认白底蓝字，悬浮蓝底白字 */
+
 .btn-primary{
-  background:var(--brand);
-  color:#fff;
-  box-shadow:0 8px 18px rgba(25,118,255,.28);
+  background:#fff;                     /* 默认白底 */
+  color:var(--brand);                  /* 蓝字 */
+  border:2px solid var(--brand);       /* 蓝色描边 */
+  box-shadow:0 8px 18px rgba(25,118,255,.12);
 }
+
 .btn-primary:hover{
-  background:var(--brand-dark);
+  background:var(--brand);             /* 悬浮变蓝底 */
+  color:#fff;                          /* 白字 */
   transform:translateY(-1px);
   box-shadow:0 14px 30px rgba(37,99,235,.32);
+  border-color:var(--brand);
 }
+
 .btn-primary:active{
   transform:translateY(1px) scale(.98);
   box-shadow:0 5px 14px rgba(37,99,235,.28);

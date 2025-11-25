@@ -251,6 +251,7 @@ body{
   gap:12px;
   margin-top:6px;
 }
+
 .btn{
   border:none;
   border-radius:999px;
@@ -268,6 +269,7 @@ body{
     background .18s ease-out,
     color .18s ease-out;
 }
+
 .btn::after{
   content:"";
   position:absolute;
@@ -281,39 +283,71 @@ body{
   opacity:0;
   pointer-events:none;
 }
+
 .btn:active::after{
   animation:ripple .45s ease-out;
 }
+
 @keyframes ripple{
-  0%{opacity:.45;width:0;height:0}
-  70%{opacity:.2;width:220%;height:220%}
-  100%{opacity:0;width:260%;height:260%}
+  0%{
+    opacity:.45;
+    width:0;
+    height:0;
+  }
+  70%{
+    opacity:.2;
+    width:220%;
+    height:220%;
+  }
+  100%{
+    opacity:0;
+    width:260%;
+    height:260%;
+  }
 }
 
+/* ===== 主按钮：默认白底蓝字，悬浮蓝底白字 ===== */
+
 .btn-primary{
-  background:var(--brand);
-  color:#fff;
-  box-shadow:0 10px 24px rgba(10,102,255,.32);
+  background:#fff;               /* 白底 */
+  color:var(--brand);            /* 蓝字 */
+  border:2px solid var(--brand); /* 有边框更像“线性按钮” */
+  box-shadow:0 10px 24px rgba(10,102,255,.08);
 }
+
 .btn-primary:hover{
-  background:var(--brand-dark);
+  background:var(--brand);       /* 变成蓝底 */
+  color:#fff;                    /* 白字 */
   box-shadow:0 16px 32px rgba(10,102,255,.35);
-  transform:translateY(-1px);
+  transform:translateY(-1px);    /* 轻微上浮 */
 }
+
 .btn-primary:active{
   transform:translateY(1px) scale(.99);
   box-shadow:0 5px 14px rgba(10,102,255,.25);
 }
+
+/* ===== 链接按钮：同样的交互逻辑（可选） ===== */
+
 .btn-link{
-  background:transparent;
+  background:#fff;               /* 默认也改成白底蓝字 */
   color:var(--brand);
   text-align:center;
   font-weight:700;
   padding:6px 10px;
   text-decoration:none;
+  border-radius:999px;
+  border:1px solid transparent;  /* 方便 hover 时不抖动 */
+  transition:
+    background .18s ease-out,
+    color .18s ease-out,
+    border-color .18s ease-out;
 }
+
 .btn-link:hover{
-  background:var(--brand-soft);
+  background:var(--brand);       /* 悬浮蓝底 */
+  color:#fff;                    /* 白字 */
+  border-color:var(--brand-soft);
 }
 
 /* 版本号微弱浮动 */
